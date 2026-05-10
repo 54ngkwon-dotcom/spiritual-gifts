@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>은사 발견 익스페디션 v55</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg: #FBF1E6;
+            --surface: #FFFFFF;
+            --surface-soft: #FFF7EE;
+            --ink: #2A1F1A;
+            --ink-mid: #5C4A3D;
+            --ink-muted: #9C8676;
+            --line: #EFE2D2;
+            --line-soft: #F6EBDC;
+            --accent: #C66E47;
+            --accent-deep: #A85428;
+            --accent-soft: #FCE5D0;
+            --accent-bg: #FFEDDB;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            margin: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 480px; margin: 0 auto; padding: 1.5rem; min-height: 100vh; }
+        section { display: none; }
+        #scr-intro { display: block; }
+
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin: 0; }
+        .label-tiny {
+            font-size: 10px; font-weight: 800; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--ink-muted);
+        }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-top: 0.5rem; }
+        .top-bar .progress-text { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink-muted); text-transform: uppercase; }
+        .progress-bar { width: 100%; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin-bottom: 1.75rem; }
+        .progress-bar > div { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+        .back-btn { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--ink-muted); letter-spacing: 0.08em; cursor: pointer; padding: 0.25rem 0.5rem; margin-left: -0.5rem; font-family: inherit; }
+        .back-btn:hover { color: var(--accent); }
+
+        .gnb { margin-bottom: 1rem; padding-top: 0.25rem; }
+        .gnb-row-dots { display: flex; align-items: center; padding: 0 8px; }
+        .gnb-step { background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .gnb-step.locked { cursor: not-allowed; }
+        .gnb-dot { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); font-size: 11px; font-weight: 800; color: var(--ink-muted); transition: all 0.25s; }
+        .gnb-step.active .gnb-dot { background: var(--ink); color: var(--surface); border-color: var(--ink); transform: scale(1.08); }
+        .gnb-step.done .gnb-dot { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+        .gnb-step.done:hover .gnb-dot { background: var(--accent-deep); border-color: var(--accent-deep); }
+        .gnb-step.locked .gnb-dot { opacity: 0.4; }
+        .gnb-line { flex: 1; height: 1.5px; background: var(--line); margin: 0 6px; transition: background 0.4s; }
+        .gnb-line.done { background: var(--accent); }
+        .gnb-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 0 0; }
+        .gnb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); transition: color 0.2s; }
+        .gnb-label.active { color: var(--ink); }
+        .gnb-label.done { color: var(--accent); }
+
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 1.5rem; }
+
+        .btn { width: 100%; padding: 1.05rem 1.25rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+        .btn-primary { background: var(--ink); color: var(--surface); }
+        .btn-primary:hover { background: #1a1310; }
+        .btn-primary:active { transform: scale(0.99); }
+        .btn-secondary { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+        .btn-accent { background: var(--accent); color: var(--surface); }
+
+        .ans-btn { width: 100%; padding: 1rem 1.25rem; margin-bottom: 0.5rem; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); font-weight: 600; color: var(--ink-mid); text-align: left; cursor: pointer; transition: all 0.15s; font-family: inherit; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
+        .ans-btn:hover { border-color: var(--accent); background: var(--accent-bg); color: var(--ink); }
+        .ans-btn:active { transform: scale(0.99); }
+        .ans-btn .score { color: var(--ink-muted); font-size: 0.78rem; font-weight: 700; }
+
+        input, textarea { width: 100%; padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-family: inherit; font-size: 0.95rem; font-weight: 500; color: var(--ink); outline: none; transition: border 0.15s; }
+        input:focus, textarea:focus { border-color: var(--accent); }
+        textarea { min-height: 140px; resize: vertical; line-height: 1.7; }
+
+        .chk-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .chk-item { padding: 0.85rem 0.5rem; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 0.85rem; font-weight: 600; text-align: center; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; user-select: none; }
+        .chk-item:hover { border-color: var(--accent); }
+        .chk-item.selected { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+        .scale-row { display: flex; justify-content: space-between; align-items: center; gap: 0.4rem; position: relative; padding: 1rem 0; }
+        .scale-row::before { content: ''; position: absolute; top: 50%; left: 24px; right: 24px; height: 1px; background: var(--line); z-index: 0; }
+        .scale-btn { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); font-weight: 700; color: var(--ink-muted); cursor: pointer; position: relative; z-index: 1; font-size: 0.95rem; font-family: inherit; transition: all 0.2s; }
+        .scale-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .scale-btn.active { background: var(--ink); color: var(--surface); border-color: var(--ink); transform: scale(1.1); }
+        .scale-labels { display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-mid); padding: 0 4px; }
+
+        .report { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+        .report-section { padding: 1.75rem 1.5rem; border-bottom: 1px solid var(--line-soft); }
+        .report-section:last-child { border-bottom: none; }
+        .report-header { background: var(--accent-soft); padding: 2rem 1.5rem; }
+        .section-title { font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 1.25rem; }
+
+        .style-row { padding: 0.5rem 0 1.25rem; }
+        .style-row:last-child { padding-bottom: 0; }
+        .style-axis { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--ink-mid); margin-bottom: 0.55rem; }
+        .style-axis .center { font-size: 0.7rem; font-weight: 800; color: var(--accent-deep); background: var(--accent-soft); padding: 3px 10px; border-radius: 99px; }
+        .style-track { position: relative; height: 6px; background: var(--line); border-radius: 3px; }
+        .style-track .dot { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); transform: translate(-50%, -50%); transition: left 1s ease; }
+
+        .gift-row { margin-bottom: 1.1rem; }
+        .gift-row:last-child { margin-bottom: 0; }
+        .gift-name { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.45rem; }
+        .gift-name .rank { font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; }
+        .gift-name .name { font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-left: 0.5rem; }
+        .gift-name .pts { font-size: 0.78rem; font-weight: 700; color: var(--ink-muted); }
+        .bar-track { background: var(--line); height: 4px; border-radius: 2px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--ink); border-radius: 2px; }
+        .info-btn { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: var(--accent-soft); color: var(--accent-deep); border-radius: 50%; font-size: 10px; font-weight: 800; margin-left: 0.4rem; cursor: pointer; border: none; vertical-align: middle; padding: 0; line-height: 1; }
+
+        .extra-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .extra-item { display: flex; justify-content: space-between; padding: 0.7rem 0.85rem; background: var(--surface-soft); border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: var(--ink-mid); border: 1px solid var(--line-soft); }
+        .extra-item .v { color: var(--accent-deep); font-weight: 700; }
+
+        .all-list { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .all-list.open { max-height: 1200px; padding-top: 0.5rem; }
+        .all-row { display: flex; justify-content: space-between; padding: 0.55rem 0; border-bottom: 1px solid var(--line-soft); font-size: 0.85rem; color: var(--ink-mid); }
+        .all-row:last-child { border-bottom: none; }
+        .all-row .v { color: var(--ink); font-weight: 700; }
+
+        .toggle-btn { width: 100%; padding: 0.85rem; margin-top: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); font-size: 0.82rem; font-weight: 700; color: var(--ink-mid); cursor: pointer; font-family: inherit; }
+
+        .vision-quote { font-size: 0.95rem; line-height: 1.75; color: var(--ink); padding: 1.1rem 1.25rem; background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; font-style: italic; margin: 0; }
+
+        .tag { display: inline-block; padding: 6px 12px; background: var(--accent-soft); color: var(--accent-deep); border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin: 0 4px 6px 0; }
+
+        .dept-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--surface-soft); border: 1px solid var(--line-soft); border-radius: 14px; margin-bottom: 0.55rem; }
+        .dept-card:last-child { margin-bottom: 0; }
+        .dept-name { font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
+        .dept-meta { font-size: 0.7rem; color: var(--ink-muted); font-weight: 600; }
+        .dept-fit { font-size: 0.65rem; font-weight: 800; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; }
+
+        .stage-row { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line-soft); }
+        .stage-row:last-child { border-bottom: none; }
+        .stage-num { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--ink-muted); flex-shrink: 0; font-size: 0.9rem; }
+        .stage-row.active .stage-num { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+        .stage-row.done .stage-num { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+        .stage-name { font-size: 1rem; font-weight: 800; color: var(--ink); }
+        .stage-row:not(.active):not(.done) .stage-name { color: var(--ink-muted); }
+        .stage-step { font-size: 0.7rem; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+        .stage-desc { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.2rem; }
+
+        .yn-btn { width: 100%; padding: 1.25rem 1.25rem; margin-bottom: 0.6rem; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; color: var(--ink); text-align: center; cursor: pointer; transition: all 0.15s; font-family: inherit; font-size: 1rem; }
+        .yn-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .yn-btn.yes { color: var(--accent-deep); }
+        .yn-btn.no { color: var(--ink-muted); }
+        .yn-btn .sub { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.08em; margin-top: 0.2rem; text-transform: uppercase; }
+
+        .sign-item { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 700; }
+        .sign-item:last-child { margin-bottom: 0; }
+        .sign-item.yes { background: var(--accent-soft); color: var(--accent-deep); }
+        .sign-item.no { background: var(--surface-soft); color: var(--ink-muted); border: 1px solid var(--line-soft); }
+        .sign-item .sign-status { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .rest-card { background: var(--accent-soft); border-radius: 18px; padding: 2rem 1.5rem; }
+        .rest-verse { font-size: 1rem; font-weight: 700; line-height: 1.75; color: var(--accent-deep); font-style: italic; margin: 0 0 1rem; }
+        .rest-comment { font-size: 0.92rem; line-height: 1.75; color: var(--ink-mid); margin: 0; }
+
+        .tip-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.45); display: none; align-items: center; justify-content: center; z-index: 100; padding: 1.5rem; }
+        .tip-overlay.open { display: flex; }
+        .tip-modal { background: var(--surface); border-radius: 18px; padding: 1.75rem; max-width: 360px; width: 100%; }
+        .tip-modal h4 { font-size: 0.95rem; font-weight: 800; color: var(--accent-deep); margin: 0 0 0.75rem; }
+        .tip-modal p { font-size: 0.9rem; line-height: 1.75; color: var(--ink-mid); margin: 0 0 1.25rem; }
+
+        .resume-banner { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--accent-deep); display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+        .resume-banner button { font-size: 0.78rem; font-weight: 700; padding: 0.5rem 0.85rem; background: var(--ink); color: var(--surface); border: none; border-radius: 8px; cursor: pointer; font-family: inherit; }
+        .resume-banner button.ghost { background: transparent; color: var(--ink-mid); border: 1px solid var(--line); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header id="ui-header" style="display:none">
+            <nav class="gnb" aria-label="단계 이동">
+                <div class="gnb-row-dots">
+                    <button type="button" class="gnb-step" data-stage="1" onclick="goToStage(1)"><span class="gnb-dot">1</span></button>
+                    <div class="gnb-line" data-line="1-2"></div>
+                    <button type="button" class="gnb-step" data-stage="2" onclick="goToStage(2)"><span class="gnb-dot">2</span></button>
+                    <div class="gnb-line" data-line="2-3"></div>
+                    <button type="button" class="gnb-step" data-stage="3" onclick="goToStage(3)"><span class="gnb-dot">3</span></button>
+                </div>
+                <div class="gnb-labels">
+                    <span class="gnb-label" data-stage-label="1">Passion</span>
+                    <span class="gnb-label" data-stage-label="2">Gifts</span>
+                    <span class="gnb-label" data-stage-label="3">Style</span>
+                </div>
+            </nav>
+            <div class="top-bar">
+                <button class="back-btn" onclick="goPrev()">← 이전</button>
+                <div class="progress-text" id="ui-zt">진행 중</div>
+                <span class="progress-text" id="ui-idx-now">0%</span>
+            </div>
+            <div class="progress-bar"><div id="ui-bar" style="width:0%"></div></div>
+        </header>
+
+        <main>
+            <section id="scr-intro" class="fade-in" style="padding-top: 4rem; text-align: center;">
+                <div style="font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em; color: var(--accent); margin-bottom: 1.25rem;">하나님의 선물을 발견하는 거룩한 여정</div>
+                <h1 style="font-size: clamp(1.5rem, 5.5vw, 1.95rem); line-height: 1.3; margin-bottom: 1.5rem;">나의 열정·은사·스타일<br>발견 테스트</h1>
+                <p style="color: var(--ink-mid); font-size: clamp(0.68rem, 2.9vw, 0.9rem); line-height: 1.8; margin: 0 0 0.5rem; padding: 0; font-style: italic; white-space: nowrap;">"우리는 그가 만드신 바라 그리스도 예수 안에서<br>선한 일을 위하여 지으심을 받은 자니"</p>
+                <p style="color: var(--ink-muted); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 3rem;">— 에베소서 2:10</p>
+                <div id="resume-area"></div>
+                <button onclick="startJourney()" class="btn btn-primary">테스트 시작하기 →</button>
+            </section>
+
+            <section id="scr-map" class="fade-in" style="padding-top: 1rem;">
+                <div class="label-tiny" style="margin-bottom: 0.5rem;">ROADMAP</div>
+                <h2 style="font-size: 1.6rem; margin-bottom: 1.75rem;">3단계 여정</h2>
+                <div class="card" style="padding: 0.5rem 1.5rem;"><div id="map-container"></div></div>
+                <button id="map-next-btn" class="btn btn-primary" style="margin-top: 2rem;">다음 단계로 →</button>
+            </section>
+
+            <section id="scr-passion" class="fade-in">
+                <div class="label-tiny" id="p-q-idx" style="margin-bottom: 0.75rem;">PASSION 1/8</div>
+                <div id="p-q-content" style="min-height: 320px;"></div>
+                <button id="p-next-btn" onclick="nextPassion()" class="btn btn-primary" style="margin-top: 1.5rem;">다음 →</button>
+            </section>
+
+            <section id="scr-p-finish" class="fade-in" style="padding-top: 4rem;">
+                <div class="label-tiny" style="margin-bottom: 0.5rem; text-align: center;">PASSION COMPLETE</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem; text-align: center;">소중한 열정을 확인했습니다</h2>
+                <p style="color: var(--ink-mid); margin-bottom: 2rem; text-align: center;">이제 은사발견 영역으로 들어가볼까요?</p>
+                <div class="rest-card" style="margin-bottom: 2rem;">
+                    <p class="rest-comment" style="margin: 0 0 1rem;">은사발견은 총 137문항으로 구성됩니다. 19문항마다 잠시 쉬어가는 시간이 있습니다.</p>
+                    <p class="rest-comment" style="margin: 0;">질문이 다소 많더라도 내가 받은 하나님의 선물을 세밀하게 찾아가는 과정이니 기쁨으로 응답해 보세요.</p>
+                </div>
+                <button onclick="updateMap(2)" class="btn btn-primary">은사 진단 시작 →</button>
+            </section>
+
+            <section id="scr-quiz" class="fade-in">
+                <div class="card" style="margin-bottom: 1.25rem; min-height: 130px; display: flex; align-items: center;">
+                    <h2 id="ui-q-text" style="font-size: 1.05rem; line-height: 1.7; font-weight: 700;"></h2>
+                </div>
+                <button onclick="window.pick(0)" class="ans-btn">전혀 그렇지 않다 <span class="score">0</span></button>
+                <button onclick="window.pick(1)" class="ans-btn">가끔 그렇다 <span class="score">1</span></button>
+                <button onclick="window.pick(2)" class="ans-btn">자주 그렇다 <span class="score">2</span></button>
+                <button onclick="window.pick(3)" class="ans-btn">매우 그렇다 <span class="score">3</span></button>
+            </section>
+
+            <section id="scr-sign-intro" class="fade-in" style="padding-top: 3rem;">
+                <div class="label-tiny" style="margin-bottom: 0.5rem; text-align: center;">BONUS CHAPTER</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.25rem; text-align: center;">표적의 은사</h2>
+                <div class="rest-card" style="margin-bottom: 2rem;">
+                    <p class="rest-comment">성령께서 능력으로 나타내시는 4가지 영역입니다. 각 항목에 대해 직접 경험하신 적이 있는지 <b>'예 / 아니오'</b>로 응답해 주세요.</p>
+                </div>
+                <button onclick="window.startSign()" class="btn btn-primary">시작 →</button>
+            </section>
+
+            <section id="scr-sign" class="fade-in">
+                <div class="label-tiny" id="sign-q-idx" style="margin-bottom: 0.75rem;">표적의 은사 1/4</div>
+                <div class="card" style="margin-bottom: 1.25rem; min-height: 140px; display: flex; align-items: center;">
+                    <h2 id="sign-q-text" style="font-size: 1.05rem; line-height: 1.7; font-weight: 700;"></h2>
+                </div>
+                <button onclick="window.pickSign(1)" class="yn-btn yes">예 (그렇다)<span class="sub">YES</span></button>
+                <button onclick="window.pickSign(0)" class="yn-btn no">아니오 (아니다)<span class="sub">NO</span></button>
+            </section>
+
+            <section id="scr-rest" class="fade-in" style="padding-top: 3rem;">
+                <div class="label-tiny" style="margin-bottom: 0.75rem; text-align: center;">REST POINT</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 2rem; text-align: center;">잠시 쉬어가세요</h2>
+                <div class="rest-card" style="margin-bottom: 2rem;">
+                    <p id="rest-verse" class="rest-verse"></p>
+                    <p id="rest-comment" class="rest-comment"></p>
+                </div>
+                <button onclick="window.resume()" class="btn btn-primary">계속하기 →</button>
+            </section>
+
+            <section id="scr-style" class="fade-in">
+                <div class="label-tiny" id="ui-style-cat" style="margin-bottom: 0.5rem;">STYLE</div>
+                <h2 id="style-q-text" style="font-size: 1.1rem; line-height: 1.65; font-weight: 700; margin-bottom: 2rem;"></h2>
+                <div class="card" style="padding: 1.5rem;">
+                    <div class="scale-row">
+                        <button onclick="pickStyle(1)" class="scale-btn" id="s1">1</button>
+                        <button onclick="pickStyle(2)" class="scale-btn" id="s2">2</button>
+                        <button onclick="pickStyle(3)" class="scale-btn" id="s3">3</button>
+                        <button onclick="pickStyle(4)" class="scale-btn" id="s4">4</button>
+                        <button onclick="pickStyle(5)" class="scale-btn" id="s5">5</button>
+                    </div>
+                    <div class="scale-labels">
+                        <span id="style-left-label"></span>
+                        <span id="style-right-label"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scr-profile" class="fade-in" style="padding-top: 2rem;">
+                <div class="label-tiny" style="margin-bottom: 0.5rem;">RECORD</div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.75rem;">청지기 정보</h2>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <input type="text" id="u-n" placeholder="성함" autocomplete="name">
+                    <input type="text" id="u-b" placeholder="생년월일 (예: 19800101)" inputmode="numeric">
+                    <input type="text" id="u-p" placeholder="연락처 (예: 010-1234-5678)" inputmode="tel" autocomplete="tel">
+                </div>
+                <button onclick="window.finish()" class="btn btn-primary" style="margin-top: 2rem;">최종 리포트 확인 →</button>
+            </section>
+
+            <section id="scr-result" class="fade-in" style="padding-bottom: 4rem;">
+                <div id="report-area" class="report">
+                    <div class="report-header">
+                        <div class="label-tiny" style="margin-bottom: 0.5rem;">SPIRITUAL IDENTITY</div>
+                        <h1 id="res-name" style="font-size: 1.65rem; margin-bottom: 0.35rem;"></h1>
+                        <p id="res-info" style="font-size: 0.8rem; color: var(--ink-mid); font-weight: 600; margin: 0;"></p>
+                    </div>
+                    <div class="report-section">
+                        <div class="section-title">Personal Insight</div>
+                        <p id="res-summary" style="font-size: 0.95rem; line-height: 1.8; color: var(--ink); margin: 0;"></p>
+                    </div>
+                    <div class="report-section">
+                        <div class="section-title">Ministry Style</div>
+                        <div class="style-row">
+                            <div class="style-axis">
+                                <span>일 중심</span>
+                                <span class="center" id="res-style-e-text"></span>
+                                <span>사람 중심</span>
+                            </div>
+                            <div class="style-track"><div id="res-dot-e" class="dot"></div></div>
+                        </div>
+                        <div class="style-row">
+                            <div class="style-axis">
+                                <span>유연함</span>
+                                <span class="center" id="res-style-o-text"></span>
+                                <span>계획적</span>
+                            </div>
+                            <div class="style-track"><div id="res-dot-o" class="dot"></div></div>
+                        </div>
+                    </div>
+                    <div class="report-section">
+                        <div class="section-title">Top 3 Spiritual Gifts</div>
+                        <div id="res-gift-top3"></div>
+                        <div class="section-title" style="margin-top: 1.75rem; margin-bottom: 0.75rem;">Additional Strengths (15+)</div>
+                        <div id="res-gift-extra" class="extra-grid"></div>
+                        <button onclick="toggleGifts()" class="toggle-btn">전체 19개 은사 점수 <span id="arrow-icon">▾</span></button>
+                        <div id="all-gifts-list" class="all-list"></div>
+                    </div>
+                    <div class="report-section">
+                        <div class="section-title">Sign Gifts · 표적의 은사</div>
+                        <div id="res-sign-list"></div>
+                    </div>
+                    <div class="report-section">
+                        <div class="section-title">Vision &amp; Passion</div>
+                        <p id="res-vision" class="vision-quote"></p>
+                        <div class="section-title" style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Focus Areas</div>
+                        <div id="res-tags"></div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 2rem;">
+                    <button onclick="saveAsImage()" class="btn btn-accent">리포트 이미지로 저장</button>
+                    <button onclick="window.location.href='mailto:jalsanggin@hanmail.net'" class="btn btn-secondary">사역팀 상담 신청</button>
+                    <button onclick="resetAll()" class="btn btn-secondary" style="font-size: 0.85rem; color: var(--ink-muted);">처음부터 다시 하기</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="tooltip-layer" class="tip-overlay" onclick="hideTip()">
+        <div class="tip-modal" onclick="event.stopPropagation()">
+            <h4 id="tip-title"></h4>
+            <p id="tip-body"></p>
+            <button class="btn btn-secondary" onclick="hideTip()" style="padding: 0.7rem;">닫기</button>
+        </div>
+    </div>
+
+    <script>
+        const Q_DATA = ["교회의 한 기관이나 한 행사를 맡아서 총괄 계획하고 편성 진행하는 일을 잘 한다.", "피부색이나 문화권이 다르더라도 잘 어울려 살 수 있다.", "물건을 잘 만지며 고치고 관리하는 일이 어렵지 않다.", "하나님에 대한 나의 생각과 느낌을 예술의 형태를 이용하여 표현하는 것을 좋아한다.", "영적인 것처럼 들리는 말에 숨어있는 잘못된 동기들을 알아챈 적이 자주 있다.", "나는 다른 사람이 곤란과 좌절에서 벗어날 수 있도록 격려하고 돕는다.", "나와 예수 그리스도의 관계에 대하여 불신자들과 말하는 것이 어렵지 않다.", "다른 성도들이 불가능하다고 생각하는 일을 위해 기도하면서 믿고 행동하는 것이 자연스럽다.", "주님으로 인해 나의 돈과 소유물을 나누어 주는 일이 자주 있다.", "앞장서서 사역하는 사람들을 뒤에서 보이지 않게 돕는 것을 잘한다.", "불시에 찾아오는 손님들도 반갑게 맞이하고 음식과 잠자리를 제공하는 것이 기쁘다.", "기도 부탁을 받으면 이를 위해 쉬지 않고 기도한다.", "성경의 요점과 중심사상을 이해하도록 내가 돕고 있다고 사람들은 내게 말한다.", "다른 사람들이 자신의 목표를 달성할 수 있도록 고무시킬 수 있다.", "몸과 마음의 장애로 고통받는 사람들과 공감하며 도움을 주려고 애쓴다.", "사람들로 하여금 자신의 잘못을 깨닫고 삶의 변화를 가져오도록 얘기해 줄 수 있다.", "남을 돌보거나 양육하는 일에 자원해서 시간을 쓴다.", "하나님의 말씀을 효과적으로 전할 수 있다.", "개인적인 다양한 삶의 문제나 혹은 영적인 문제에 관한 충고의 부탁을 종종 받는다.", "체계적으로 세부적인 면을 다루는 데 철저하고 신중하며 능숙하다.", "다른 나라나 지역, 다른 인종 공동체에서 사역하는 일에 흥미도 있고 도울 수 있다.", "여러 종류의 연장을 잘 다룬다.", "미술, 연극, 음악, 사진 등의 예술적인 기술을 개발하고 사용하는 것을 좋아한다.", "첫인상으로 사람들의 성격을 잘 파악한다.", "낙심한 사람들을 격려하고 자신감을 회복시켜 주기를 좋아한다.", "불신자들과 사귈 수 있는 기회를 항상 찾는다.", "환란 중에서도 하나님께서 도우시고 공급하시는 것을 확신한다.", "하나님 나라의 사역을 위해 십일조 이상의 헌금을 한다.", "큰일 뒤에 소홀히 여길 수 있는 세부적이고 일상적인 일들이 눈에 잘 띈다.", "새로운 사람들을 만나고 그들이 환영받는다는 느낌을 주는 일들이 즐겁다.", "오랫동안 기도하며 하나님이 원하시는 기도를 하도록 인도하여 주시는 것을 자주 경험한다.", "자연적으로 알 수 없는 어떠한 사실을 성령님으로부터 받아 알게 될 때가 있다.", "다른 이들이 목표를 달성할 수 있도록 영향을 줄 수 있다.", "어려움을 겪고 있는 이들이 다시 안정을 되찾는 동안 인내심을 가지고 도울 수 있다.", "다른 사람들에게 진실을 밝히게 하는 것이 나의 의무라는 느낌을 받는다.", "방황하고 있는 신자들을 동정하며 그들을 감싸주고 책임져주고 싶다.", "진리가 사람의 삶에 변화를 가져올 수 있는 것을 알기 때문에 배우는데 시간을 투자할 수 있다.", "갈등이나 혼돈 가운데서 종종 간단하고도 실질적인 해결책을 발견할 때가 많다.", "어떤 목표를 세우고 이를 이루기 위한 계획이나 방안을 수립할 수 있다.", "개척교회같이 새롭게 출발하는 사역을 세우는 데 기꺼이 일익을 담당할 수 있다.", "사역에 필요한 물건을 만들기를 좋아한다.", "사람들이 자기 자신에 대한 이해, 사람들과의 관계, 그리고 하나님에 관해 보다 잘 이해할 수 있도록 예술적 표현을 통해서 돕는다.", "다른 사람들보다 먼저 거짓이나 가식을 잘 꿰뚫어 볼 수 있다.", "다른 사람들에게 하나님의 약속을 상기시켜 줌으로써 소망을 얻게 한다.", "복음의 핵심을 개인의 필요에 따라 적절히 응용하는 일을 잘 한다.", "큰 일을 성취하도록 하나님이 나를 도우시리라고 확신한다.", "더 많은 구제헌금을 하기 위해 돈 관리를 잘 한다.", "다른 사람들을 돕기 위해 기꺼이 교회 안팎의 잡일들을 스스로 하게 된다.", "다른 사람과 연결이 필요한 사람들을 하나님께서 내게로 보내신다고 진심으로 믿는다.", "나는 기도할 때 이 일이 다른 사람을 위해 중요한 사역하는 것이라고 인식한다.", "성경을 정확하고 온전히 이해하기 위하여 성경을 읽고 공부하는 일이 즐겁고 그런 일을 위해 시간을 따로 할당한다.", "다른 사람들이 능력을 최대한 발휘할 수 있게 하기 위해 필요에 따라 지도방법을 변경시킬 수 있다.", "구제불능 또는 가치가 없다고 여겨지는 사람들을 돕는 일이 즐겁다.", "성경적 원리에 어긋나는 문화적 추세나 가르침, 행사들을 담대하게 지적한다.", "그리스도인의 모임을 영적으로 인도하고 방향을 제시해 주는 일이 그리 두렵지 않고 사람들도 나를 신뢰하며 주의깊게 듣고 행하는 편이다.", "가르치는 사람의 말, 어구, 내용 등에 대해 세심히 관심을 집중한다.", "여러 가능한 방안 중에서 가장 효과적인 방안을 쉽게 골라낼 수 있다.", "어떤 일을 하는 데 필요한 자원을 찾아내고 활용하는 일을 할 수 있다.", "다른 문화나 새롭게 바뀌어진 환경에서 일 할 때 잘 적응한다.", "어떤 것을 만들기 이전에 이것이 어떻게 완성되어질 것인가를 쉽게 연상해 볼 수 있다.", "주님을 전할 수 있는 새롭고 참신한 방법(드라마, 음악, 그림, 그래픽)을 찾기 좋아한다.", "어떤 상황에서 옳고 그름을 잘 분간하는 편이다.", "믿음 생활, 가정 생활 또는 전체 삶 가운데 용단을 내려야 할 필요가 있는 사람들에게 그렇게 하는 것에 대한 확신을 줄 수 있다.", "믿지 않는 이들에게 주님을 영접하도록 권한다.", "인간의 노력만으로는 성공이 보장되지 상황에서 하나님을 의지한다.", "소득의 더 많은 부분을 헌금할 수 있도록 내 생활 방식을 절제해야겠다는 도전을 받는다.", "실제적인 작은 일 가운데서 영적인 의미를 발견한다.", "사람들이 외롭지 않다는 느낌을 가질 수 있는 장소를 만들고 싶다.", "기도에 응답하시는 하나님이신 것을 믿기 때문에 확신을 가지고 계속 기도한다.", "통찰력이 있고 진실을 금방 알 수 있다.", "목표를 세우고 이를 이루기 위해 사람이나 자원을 효과적으로 잘 사용한다.", "고통받고 있는 사람들에게 커다란 연민의 감정을 느껴서 고통스럽다.", "대부분의 행동을 옳고 그름의 견지에서 보게 되는 때가 많으며, 그릇된 것을 바로 잡아야 하겠다는 필요를 절실히 느낀다.", "내가 맡은 그리스도인 모임의 영적인 건강을 책임지는 일이 즐겁다.", "내가 알고 있는 것을 재미있게 전할 수 있는 능력이 있는 것 같다.", "누군가가 문제에 봉착하면 나는 그들에게 가장 성서적인 해결책을 제시한다.", "어떤 기관이나 사역이 보다 효과적이고 효율적으로 될 수 있는 방안을 늘 중요시한다.", "새로운 사람들을 대할 때 그들의 문화에 대해 빨리 이해하고 세심한 배려를 할 수 있다.", "나의 손재주 통해 사람들을 돕고 하나님의 일에 활력을 불어넣는다.", "하나님의 진리를 전하기 위해 여러 형태의 예술을 도입한다.", "나의 통찰력이나 관찰력을 사람들이 인정한다.", "믿음이 흔들리고 있는 이들을 크게 위로하며 강건케 한다.", "내가 기독교인인 것을 드러내고 말하며 불신자들이 내 믿음에 관해 물어오기를 원한다.", "하나님이 내 삶 속에 매일 함께 하시며 역사하시는 것을 확신한다.", "하나님의 일을 하는 사람들의 삶과 사역에 내 헌금이 큰 도움이 된다는 것을 늘 감사한다.", "해야 할 잡다한 일들을 잘 찾아내며 부탁 받지 않더라도 종종 그러한 일들을 하곤 한다.", "사람들 접대하기를 좋아하며 내 집을 다른 사람들에게 제공한다.", "도움이 필요한 경우의 이야기를 들으면 기도해야 되겠다는 강한 느낌을 받는다.", "교회 지체들 안에 매우 유용한 사실이 나중에 입증되는 어떤 생각을 내가 가장 먼저 추진한 적이 있다.", "자신의 능력을 최대한 발휘하도록 다른 이들에게 영향을 준다.", "어떤 사람의 고난이나 문제 이면에 하나님께서 진정 중요하게 여기시는 삶이 있는 것을 알 수 있다.", "정직하고 바른 말을 하는 사람들을 좋아한다.", "맡겨진 소그룹의 사람들에게 도움을 주고 지침을 주는 것을 즐긴다.", "사람들로 하여금 더 배우고 공부하고 싶은 마음이 생기도록 말씀을 통하여 도전을 줄 수 있다.", "복잡한 문제를 해결할 수 있는 실질적인 조언을 준다.", "한 기관이 어떻게 운영되고 있는지 구조나 조직을 배우기를 좋아한다.", "새로운 일을 시작할 때 오히려 호기심과 창의성이 생기며 좋아한다.", "손으로 하는 일을 잘하며 좋아한다.", "창조적이며 상상력이 풍부하다.", "성경에 위배되는 가르침이나 설교, 말씀을 분간할 수 있다.", "영적인 성장을 위해 무언가 하고 싶은 마음을 사람들에게 불어 넣기를 좋아한다.", "불신자들에게 예수님이 내게 어떠한 일을 하셨는지 담대하게 자주 말한다.", "다른 이들이 하나님을 신뢰하도록 계속 도전을 준다.", "청지기로서의 삶에 대한 결단을 통해서 풍성히 헌금한다.", "남들이 좀 더 효과적으로 일할 수 있도록 뒤에서 돕는 보조자의 역할도 기꺼이 자주 한다.", "다른 이들이 소속감을 느낄 수 있도록 힘껏 노력한다.", "기도 부탁을 받으면 영광으로 생각한다.", "말씀을 읽거나 공부할 때 그리스도의 몸에 속한 다른 이들에게 유익을 주는 성경적인 진리를 발견하게 된다.", "다른 이들이 공감하는 비전을 제시할 수 있다.", "어려운 상황 중에 있는 사람들에게 소망과 기쁨을 주기를 좋아한다.", "쉽게 받아들여지지 않거나 잘 환영을 받지 않는 장소에서라도 하나님의 진리를 선포하겠다.", "방황하는 신자들이 성도의 교제와 믿음을 되찾을 수 있도록 자연스럽게 인도할 수 있다.", "어떤 지식이나 기술을 상대방이 알아듣고 적용하기 쉽게 가르쳐 줄 수 있다.", "사람들이 실제 도움이 된다고 여겨지도록 성경의 진리를 적용할 수 있는 말을 해준다.", "앞의 행사를 미리 그려보고 가능한 문제들을 예상하여 대안을 만들어 낼 수 있다.", "교회의 여러 사역을 총괄 지휘할 수 있다.", "다른 문화권이나 다른 지역의 사람들에게 복음을 전하는 일에 깊은 열망을 가지고 있다.", "사역이나 교회에 도움이 되는 물건을 구상하고 만들 수 있다.", "명상하며 상상력이 키우기 위한 혼자만의 시간이 가끔 필요하다.", "어떤 사람이나 환경에서 마귀가 역사하고 있음을 잘 감지할 수 있다.", "사람들을 영적으로 성장시키기 위해 도전을 주거나 꾸짖어 바로 세울 수 있다.", "믿지 않는 사람들과 영적인 문제에 관한 얘기할 수 있는 기회를 찾는다.", "하나님이 축복하시는 일이라고 생각하면 반대나 비협조를 무릅쓰고라도 추진할 수 있다.", "하나님의 일을 위해 더 많이 드리기 위하여 내게 자원을 허락하셨다고 믿는다.", "도움이 필요할 때마다 선천적인 혹은 후천적인 기술을 늘 기꺼이 사용한다.", "낯선 환경 중에서라도 사람들로 하여금 편안하게 느낄 수 있도록 만들 수 있도록 만들 수 있다.", "내 기도의 직접적인 응답으로 구체적인 결과가 오는 것을 자주 본다.", "나는 성경적인 진리를 알기 위해서 많은 독서와 공부를 한다.", "목적지가 어딘지를 파악하고 사람들이 그곳에 도달할 수 있도록 잘 돕는다.", "어려워서 도움이 필요한 사람들에게 실제적인 도움을 주는 것을 좋아한다.", "죄를 볼 때마다 이것을 드러내고 그들이 회개하도록 도전하지 않으면 안 된다고 느끼며 행동한다.", "사람들이 신자로서 성장할 수 있도록 참을성 있게 그러나 흔들림 없이 양육하는 것을 좋아한다.", "다른 이들이 영적으로 또한 개인적으로 성장할 수 있도록 어떤 일들을 설명해 주는 것을 좋아한다.", "다른 사람들이 보지 못하는 문제의 해결책에 대한 통찰력이 있다."];
+        const GIFTS = [{n:"다스림"},{n:"사도"},{n:"재주"},{n:"예능/창의"},{n:"영분별"},{n:"권면/위로"},{n:"전도"},{n:"믿음"},{n:"구제/헌금"},{n:"돕는 은사"},{n:"대접/친절"},{n:"중보기도"},{n:"지식"},{n:"지도력"},{n:"긍휼"},{n:"예언"},{n:"목양"},{n:"가르침"},{n:"지혜"}];
+        const SIGN_Q = [
+            {n:"치유의 은사", q:"내가 누군가에게 손을 얹고 기도할 때, 즉각적인 치유가 반복적으로 일어나는 것을 경험한 적이 있다."},
+            {n:"방언 통역의 은사", q:"사람들이 방언으로 말하는 것을 들을 때, 성령께서 그 메시지를 내게 드러내 주시는 것을 느끼며, 나는 그것을 교회를 위해 통역하여 말한 적이 있다."},
+            {n:"능력 행함의 은사", q:"내 안에서 역사하시는 하나님의 능력을 통해 귀신을 쫓아내고 병든 자를 치유하는 것을 경험했으며, 자연 가운데 나타나는 하나님의 초자연적인 개입을 본 적이 있다."},
+            {n:"방언의 은사", q:"내가 이해하지 못하는 언어로 말한 적이 있으며, 그때 누군가가 내가 방금 한 말을 통역하여 전한 적이 있다."}
+        ];
+        const GIFT_GUIDES = {
+            "다스림": "기획력과 조직 관리 역량이 탁월합니다. 목표를 실행 가능한 계획으로 만드는 능력이 있으나, 일의 진척 때문에 동역자의 마음을 놓치지 않도록 주의하십시오.",
+            "사도": "새로운 영역을 개척하는 비전가입니다. 낯선 환경에서도 복음을 확장할 때 에너지가 넘치며 새로운 시도에 최적화되어 있습니다.",
+            "가르침": "진리를 체계적으로 전달하는 능력이 뛰어납니다. 남들의 깨달음에서 보람을 느끼며, 지식과 인격적 교감의 균형이 중요합니다.",
+            "긍휼": "아픔을 민감하게 느끼는 사랑의 은사입니다. 소외된 이웃을 돌볼 때 하나님 심장을 보여주나 본인의 영적 소모를 유의하십시오.",
+            "지혜": "하나님 관점으로 해답을 찾는 통찰력이 있습니다. 분쟁 중재나 실질적 조언 사역에서 역량을 발휘합니다."
+        };
+        const DEPARTMENTS = [
+            {n:"유아부", r:["목양","가르침"]},
+            {n:"유년부", r:["목양","가르침"]},
+            {n:"초등부", r:["가르침","다스림"]},
+            {n:"중등부", r:["가르침","사도"]},
+            {n:"청년멘토", r:["권면/위로","다스림"]},
+            {n:"안내팀", r:["대접/친절","돕는 은사"]},
+            {n:"중보기도팀", r:["중보기도"]},
+            {n:"순장", r:["목양","권면/위로"]},
+            {n:"새가족부", r:["대접/친절","전도"]},
+            {n:"상담팀", r:["긍휼","지혜"]},
+            {n:"부부사역팀", r:["권면/위로","목양"]},
+            {n:"환경미화팀", r:["재주","돕는 은사"]}
+        ];
+        const BIBLE_VERSES = [
+            { v: '"우리는 그가 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니" (엡 2:10)', c: "성도님은 하나님의 걸작품입니다. 다음 영역으로 더 깊이 들어가 볼까요?" },
+            { v: '"내가 너를 모태에 짓기 전에 너를 알았고 네가 배에서 나오기 전에 너를 성별하였고" (렘 1:5)', c: "하나님은 성도님을 이미 알고 계셨습니다. 한 걸음 더 나아가 봅시다." },
+            { v: '"너희를 향한 나의 생각을 내가 아나니 평안이요 미래와 희망을 주는 것이니라" (렘 29:11)', c: "절반에 도착했습니다. 주님이 예비하신 미래를 기대하십시오." },
+            { v: '"우리에게 주신 은혜대로 받은 은사가 각각 다르니" (롬 12:6)', c: "고유한 색깔을 확인하는 중입니다. 조금만 더 힘내세요." },
+            { v: '"은사는 여러 가지나 성령은 같고 직분은 여러 가지나 주는 같으며" (고전 12:4)', c: "공동체의 아름다운 모습을 그려보십시오. 정상이 멀지 않았습니다." },
+            { v: '"내 형질이 이루어지기 전에 주의 눈이 보셨으며" (시 139:16)', c: "마지막 구간에 도착하셨습니다. 보물을 곧 확인하게 됩니다." }
+        ];
+        const PASSION_Q = [
+            {q:"실패의 두려움 없이 모든 것이 보장된다면, 꼭 해보고 싶은 '가슴 뛰는 일'은?", ex:"예: 해외 선교지 학교 설립, 독거노인 급식 사역 등"},
+            {q:"평소 어떤 분야나 사람들을 볼 때 가장 마음이 뜨거워지거나 관심이 가시나요?", ex:"예: 다음 세대의 영적 성장, 깨어진 가정의 회복 등"},
+            {q:"밤을 새워 이야기해도 지치지 않을 만큼 당신을 설레게 하는 주제는?", ex:"예: 성경적 자녀 양육, 예배의 감격 회복 등"},
+            {q:"지금까지의 사역 속에서 가장 큰 보람과 기쁨을 느꼈던 때는?", ex:"예: 소그룹 리더로 한 영혼이 변화될 때 등"},
+            {q:"성도님의 마음을 아프게 하거나, 개선하고 싶다는 '거룩한 부담감'을 느끼는 일은?", ex:"예: 소외된 이웃에 대한 무관심, 다음 세대 교육 부재 등"},
+            {q:"당신의 인생에서 가장 가치 있게 생각하며 지키고 싶은 핵심 가치 3가지는?", ex:"예: 정직, 사랑, 헌신, 전문성, 신실함 등"},
+            {q:"하나님의 사랑으로 특별히 마음이 가고 돕고 싶은 대상은? (최대 3개)", ex:""},
+            {q:"성도님이 강한 의견이나 관심을 갖고 있는 사회적/영적 문제는? (최대 3개)", ex:""}
+        ];
+        const TARGETS = ["유아","어린이","청소년","청년/대학생","직장인","신혼부부","부모/양육자","중장년","노인","독신자","홀부모","이혼/사별가정","장애인","입원환자","홈리스","실직자","외국인근로자","군인","수감자","농어촌","다문화","해외선교"];
+        const ISSUES = ["환경오염","탁아 문제","동성연애","제자훈련","에이즈 문제","정치","폭력","사회 부정","인종 차별","교육","중독","국제 문제","경제","전도","기술","의료혜택","빈곤","가정","낙태","기아","문맹퇴치","교회","기타"];
+        const STYLE_Q = [
+            {t:"업무 방식", q:"휴가를 보내실 때 성도님은 어떤 편이신가요?", l:"즉흥적", r:"계획적"},
+            {t:"업무 방식", q:"지침을 세우실 때 어떤 스타일을 선호하시나요?", l:"일반적", r:"세부적"},
+            {t:"업무 방식", q:"작업을 진행하시는 방식은 어떠신가요?", l:"상황 따라", r:"계획 순서"},
+            {t:"업무 방식", q:"선호하시는 업무 스타일은 어떠신가요?", l:"다양한 일", r:"꾸준한 일"},
+            {t:"업무 방식", q:"무엇을 결정하실 때 어떤 성향이신가요?", l:"여지 남김", r:"결말 지음"},
+            {t:"업무 방식", q:"일을 하실 때 더 중요하게 여기시는 점은?", l:"임기응변", r:"규칙/절차"},
+            {t:"업무 방식", q:"반복되는 일상 업무에 대한 느낌은?", l:"싫증 느낌", r:"편안함 느낌"},
+            {t:"에너지 획득", q:"어느 때 더 편안함을 느끼시나요?", l:"혼자 작업", r:"사람 교제"},
+            {t:"에너지 획득", q:"사역에 집중하실 때의 주된 방향은?", l:"목표 중심", r:"관계 중심"},
+            {t:"에너지 획득", q:"사역의 열정이 생기는 계기는 무엇인가요?", l:"명분 이행", r:"조직 형성"},
+            {t:"에너지 획득", q:"최고의 성취감을 느끼는 순간은?", l:"일 완성", r:"관계 형성"},
+            {t:"에너지 획득", q:"회의가 시작되는 시점에 대한 생각은?", l:"정해진 시간", r:"사람 모임"},
+            {t:"에너지 획득", q:"업무 시 더 큰 염려가 되는 부분은?", l:"마감 준수", r:"관계 유지"},
+            {t:"에너지 획득", q:"사역에서 더 핵심으로 여기시는 것은?", l:"완성도", r:"대화/공감"}
+        ];
+
+        let cur = 0, p_cur = 0, s_cur = 0, sign_cur = 0, currentIsland = 0, maxIsland = 0;
+        let ans = new Array(133).fill(null);
+        let p_ans = new Array(8).fill("");
+        let s_ans = new Array(14).fill(0);
+        let sign_ans = new Array(4).fill(null);
+        let selectedTargets = [], selectedIssues = [];
+
+        const STORAGE_KEY = 'sg_expedition_v55';
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    cur, p_cur, s_cur, sign_cur, currentIsland, maxIsland,
+                    ans, p_ans, s_ans, sign_ans, selectedTargets, selectedIssues
+                }));
+            } catch(e) {}
+        }
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if(!raw) return false;
+                const s = JSON.parse(raw);
+                cur = s.cur || 0; p_cur = s.p_cur || 0; s_cur = s.s_cur || 0;
+                sign_cur = s.sign_cur || 0;
+                currentIsland = s.currentIsland || 0;
+                maxIsland = s.maxIsland || s.currentIsland || 0;
+                ans = s.ans || new Array(133).fill(null);
+                p_ans = s.p_ans || new Array(8).fill("");
+                s_ans = s.s_ans || new Array(14).fill(0);
+                sign_ans = s.sign_ans || new Array(4).fill(null);
+                selectedTargets = s.selectedTargets || [];
+                selectedIssues = s.selectedIssues || [];
+                return true;
+            } catch(e) { return false; }
+        }
+        function clearState() { try { localStorage.removeItem(STORAGE_KEY); } catch(e) {} }
+
+        function showPage(id) {
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            const el = document.getElementById(id);
+            if(el) { el.style.display = 'block'; window.scrollTo(0,0); }
+        }
+
+        function updateHeaderUI(island) {
+            currentIsland = island;
+            if(island > 0 && island > maxIsland) maxIsland = island;
+            document.getElementById('ui-header').style.display = (island > 0) ? 'block' : 'none';
+            if(island > 0) renderGNB();
+        }
+
+        function renderGNB() {
+            for(let i = 1; i <= 3; i++) {
+                const step = document.querySelector(`.gnb-step[data-stage="${i}"]`);
+                const label = document.querySelector(`.gnb-label[data-stage-label="${i}"]`);
+                if(!step || !label) continue;
+                step.classList.remove('active', 'done', 'locked');
+                label.classList.remove('active', 'done');
+                if(i === currentIsland) {
+                    step.classList.add('active');
+                    label.classList.add('active');
+                } else if(i <= maxIsland) {
+                    step.classList.add('done');
+                    label.classList.add('done');
+                } else {
+                    step.classList.add('locked');
+                }
+            }
+            const line12 = document.querySelector('.gnb-line[data-line="1-2"]');
+            const line23 = document.querySelector('.gnb-line[data-line="2-3"]');
+            if(line12) line12.classList.toggle('done', maxIsland >= 2);
+            if(line23) line23.classList.toggle('done', maxIsland >= 3);
+        }
+
+        function goToStage(id) {
+            if(id > maxIsland) return;
+            if(id === currentIsland) return;
+            updateHeaderUI(id);
+            if(id === 1) { renderPassionStep(); showPage('scr-passion'); }
+            else if(id === 2) {
+                if(ans[132] !== null && sign_ans.some(a => a === null)) {
+                    window.startSign();
+                } else if(ans[132] !== null) {
+                    sign_cur = 3; renderSign(); showPage('scr-sign');
+                } else {
+                    renderGift(); showPage('scr-quiz');
+                }
+            }
+            else if(id === 3) { renderStyle(); }
+            saveState();
+        }
+        window.goToStage = goToStage;
+
+        function checkResume() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if(!raw) return;
+            try {
+                const s = JSON.parse(raw);
+                if(s.currentIsland > 0) {
+                    const stage = s.currentIsland === 1 ? 'Passion' : s.currentIsland === 2 ? '은사 진단' : 'Style';
+                    document.getElementById('resume-area').innerHTML = `
+                        <div class="resume-banner">
+                            <span>이전 진행 (${stage})이 남아 있습니다</span>
+                            <div style="display:flex; gap:0.4rem">
+                                <button class="ghost" onclick="event.stopPropagation(); clearState(); document.getElementById('resume-area').innerHTML='';">초기화</button>
+                                <button onclick="event.stopPropagation(); resumeJourney();">이어하기</button>
+                            </div>
+                        </div>`;
+                }
+            } catch(e) {}
+        }
+
+        function resumeJourney() {
+            loadState();
+            if(currentIsland === 1) { updateHeaderUI(1); renderPassionStep(); showPage('scr-passion'); }
+            else if(currentIsland === 2) { updateHeaderUI(2); renderGift(); showPage('scr-quiz'); }
+            else if(currentIsland === 3) { updateHeaderUI(3); renderStyle(); }
+        }
+
+        function startJourney() { clearState(); cur = 0; p_cur = 0; s_cur = 0; sign_cur = 0; maxIsland = 0; ans.fill(null); p_ans.fill(""); s_ans.fill(0); sign_ans.fill(null); selectedTargets = []; selectedIssues = []; updateMap(1); }
+
+        function updateMap(step) {
+            updateHeaderUI(0);
+            currentIsland = step;
+            const items = [
+                { id: 1, name: 'Passion', desc: '8문항 · 마음의 방향' },
+                { id: 2, name: 'Spiritual Gifts', desc: '133문항 · 19개 영역' },
+                { id: 3, name: 'Style', desc: '14문항 · 사역 스타일' }
+            ];
+            document.getElementById('map-container').innerHTML = items.map(item => {
+                const cls = item.id < step ? 'done' : item.id === step ? 'active' : '';
+                return `<div class="stage-row ${cls}">
+                    <div class="stage-num">${item.id}</div>
+                    <div>
+                        <div class="stage-step">Stage ${String(item.id).padStart(2,'0')}</div>
+                        <div class="stage-name">${item.name}</div>
+                        <div class="stage-desc">${item.desc}</div>
+                    </div>
+                </div>`;
+            }).join('');
+            document.getElementById('map-next-btn').onclick = () => {
+                if(step === 1) goPassion();
+                else if(step === 2) startGifts();
+                else if(step === 3) renderStyle();
+            };
+            showPage('scr-map');
+            saveState();
+        }
+
+        function goPassion() { updateHeaderUI(1); renderPassionStep(); showPage('scr-passion'); }
+
+        function renderPassionStep() {
+            const step = PASSION_Q[p_cur];
+            document.getElementById('p-q-idx').innerText = `PASSION ${p_cur+1}/8`;
+            document.getElementById('ui-zt').innerText = 'Passion';
+            document.getElementById('ui-idx-now').innerText = `${p_cur+1}/8`;
+            document.getElementById('ui-bar').style.width = (p_cur+1)/8*100+'%';
+
+            const content = document.getElementById('p-q-content');
+            content.classList.remove('fade-in'); void content.offsetWidth; content.classList.add('fade-in');
+
+            if(p_cur < 6) {
+                content.innerHTML = `
+                    <h2 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.25rem; font-weight: 700;">${step.q}</h2>
+                    <textarea id="p-input" placeholder="${step.ex}">${p_ans[p_cur] || ''}</textarea>
+                `;
+                document.getElementById('p-next-btn').innerText = '다음 →';
+            } else if(p_cur === 6) {
+                content.innerHTML = `
+                    <h2 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 0.5rem; font-weight: 700;">${step.q}</h2>
+                    <p class="label-tiny" style="margin-bottom: 0.85rem;">최대 3개 선택</p>
+                    <div class="chk-grid" id="target-list"></div>
+                `;
+                document.getElementById('target-list').innerHTML = TARGETS.map(t =>
+                    `<div class="chk-item ${selectedTargets.includes(t) ? 'selected' : ''}" onclick="toggleSelect('${t}', this, 'target')">${t}</div>`
+                ).join('');
+                document.getElementById('p-next-btn').innerText = '다음 →';
+            } else {
+                content.innerHTML = `
+                    <h2 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 0.5rem; font-weight: 700;">${step.q}</h2>
+                    <p class="label-tiny" style="margin-bottom: 0.85rem;">최대 3개 선택</p>
+                    <div class="chk-grid" id="issue-list"></div>
+                `;
+                document.getElementById('issue-list').innerHTML = ISSUES.map(i =>
+                    `<div class="chk-item ${selectedIssues.includes(i) ? 'selected' : ''}" onclick="toggleSelect('${i}', this, 'issue')">${i}</div>`
+                ).join('');
+                document.getElementById('p-next-btn').innerText = 'PASSION 완료 →';
+            }
+        }
+
+        function toggleSelect(val, el, type) {
+            const list = type === 'target' ? selectedTargets : selectedIssues;
+            const idx = list.indexOf(val);
+            if(idx > -1) { list.splice(idx, 1); el.classList.remove('selected'); }
+            else {
+                if(list.length >= 3) return alert('최대 3개까지만 선택 가능합니다.');
+                list.push(val); el.classList.add('selected');
+            }
+            saveState();
+        }
+
+        function nextPassion() {
+            if(p_cur < 6) {
+                p_ans[p_cur] = document.getElementById('p-input').value;
+                p_cur++; renderPassionStep();
+            } else if(p_cur === 6) {
+                if(selectedTargets.length === 0) return alert('최소 1개를 선택해 주세요.');
+                p_cur++; renderPassionStep();
+            } else {
+                if(selectedIssues.length === 0) return alert('최소 1개를 선택해 주세요.');
+                showPage('scr-p-finish');
+            }
+            saveState();
+        }
+
+        function startGifts() { updateHeaderUI(2); renderGift(); showPage('scr-quiz'); }
+
+        function renderGift() {
+            const ZN = ['부르심의 숲', '은혜의 시내', '연단의 골짜기', '믿음의 들판', '사명의 산맥', '비전의 산등성이', '정상: 성전'];
+            const zi = Math.floor(cur/19);
+            document.getElementById('ui-zt').innerText = ZN[zi] || ZN[ZN.length-1];
+            document.getElementById('ui-idx-now').innerText = `${cur+1}/133`;
+            document.getElementById('ui-q-text').innerText = Q_DATA[cur];
+            document.getElementById('ui-bar').style.width = (cur+1)/133*100+'%';
+        }
+
+        window.pick = function(v) {
+            ans[cur] = v;
+            if((cur+1)%19 === 0 && cur < 132) {
+                const zi = Math.floor(cur/19);
+                document.getElementById('rest-verse').innerText = BIBLE_VERSES[zi].v;
+                document.getElementById('rest-comment').innerText = BIBLE_VERSES[zi].c;
+                showPage('scr-rest');
+            } else if(cur < 132) {
+                cur++; renderGift();
+            } else {
+                showPage('scr-sign-intro');
+            }
+            saveState();
+        };
+
+        window.resume = function() {
+            cur++; showPage('scr-quiz'); renderGift(); saveState();
+        };
+
+        window.startSign = function() {
+            sign_cur = sign_ans.findIndex(a => a === null);
+            if(sign_cur < 0) sign_cur = 0;
+            renderSign();
+            showPage('scr-sign');
+        };
+
+        function renderSign() {
+            const item = SIGN_Q[sign_cur];
+            document.getElementById('sign-q-idx').innerText = `표적의 은사 ${sign_cur+1}/4 · ${item.n}`;
+            document.getElementById('sign-q-text').innerText = item.q;
+            document.getElementById('ui-zt').innerText = '표적의 은사';
+            document.getElementById('ui-idx-now').innerText = `${sign_cur+1}/4`;
+            document.getElementById('ui-bar').style.width = (sign_cur+1)/4*100+'%';
+        }
+
+        window.pickSign = function(v) {
+            sign_ans[sign_cur] = v;
+            saveState();
+            if(sign_cur < 3) {
+                sign_cur++;
+                renderSign();
+            } else {
+                updateMap(3);
+            }
+        };
+
+        function renderStyle() {
+            updateHeaderUI(3);
+            showPage('scr-style');
+            const q = STYLE_Q[s_cur];
+            const textEl = document.getElementById('style-q-text');
+            textEl.classList.remove('fade-in'); void textEl.offsetWidth; textEl.classList.add('fade-in');
+            textEl.innerText = q.q;
+            document.getElementById('ui-style-cat').innerText = q.t.toUpperCase();
+            document.getElementById('style-left-label').innerText = q.l;
+            document.getElementById('style-right-label').innerText = q.r;
+            document.getElementById('ui-zt').innerText = 'Style';
+            document.getElementById('ui-idx-now').innerText = `${s_cur+1}/14`;
+            document.getElementById('ui-bar').style.width = (s_cur+1)/14*100+'%';
+            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+            if(s_ans[s_cur] > 0) document.getElementById('s' + s_ans[s_cur]).classList.add('active');
+        }
+
+        window.pickStyle = function(v) {
+            s_ans[s_cur] = v;
+            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('s' + v).classList.add('active');
+            saveState();
+            setTimeout(() => {
+                if(s_cur < 13) { s_cur++; renderStyle(); }
+                else { updateHeaderUI(0); showPage('scr-profile'); }
+            }, 220);
+        };
+
+        window.finish = function() {
+            const n = document.getElementById('u-n').value.trim();
+            const b = document.getElementById('u-b').value.trim();
+            const p = document.getElementById('u-p').value.trim();
+            if(!n || !b || !p) return alert('모든 정보를 입력해 주세요.');
+
+            // Style A(0-6) = 업무방식, B(7-13) = 에너지획득
+            const eScore = s_ans.slice(7, 14).reduce((a,b)=>a+b, 0);
+            const oScore = s_ans.slice(0, 7).reduce((a,b)=>a+b, 0);
+            // Min=7 (all 1s), Max=35. Range=28.
+            const ePct = Math.max(0, Math.min(100, Math.round((eScore - 7) / 28 * 100)));
+            const oPct = Math.max(0, Math.min(100, Math.round((oScore - 7) / 28 * 100)));
+            const eType = ePct >= 60 ? '사람 중심' : ePct <= 40 ? '일 중심' : '중립적';
+            const oType = oPct >= 60 ? '계획적' : oPct <= 40 ? '유연한' : '중립적';
+
+            // Gift: 7 questions × 3pts max = 21
+            let sc = new Array(19).fill(0);
+            ans.forEach((v, i) => { sc[i % 19] += (v || 0); });
+            const allRes = GIFTS.map((g, i) => ({ name: g.n, score: sc[i] })).sort((a,b) => b.score - a.score);
+            const top3 = allRes.slice(0, 3);
+            const extra = allRes.filter((g, i) => i >= 3 && g.score >= 15).slice(0, 6);
+
+            document.getElementById('res-name').innerText = n;
+            document.getElementById('res-info').innerText = `${b} · ${p}`;
+            document.getElementById('res-summary').innerHTML =
+                `성도님은 <b>${top3[0].name}</b>의 은사와 <b>${selectedTargets[0] || '주님의 양 무리'}</b>를 향한 마음을 가지셨습니다. ` +
+                `<b>${eType} · ${oType}</b>의 사역 스타일로 하나님의 도구가 될 때 가장 빛이 날 것입니다.`;
+
+            document.getElementById('res-style-e-text').innerText = `${eType} ${eScore}/35점`;
+            document.getElementById('res-dot-e').style.left = ePct + '%';
+            document.getElementById('res-style-o-text').innerText = `${oType} ${oScore}/35점`;
+            document.getElementById('res-dot-o').style.left = oPct + '%';
+
+            document.getElementById('res-gift-top3').innerHTML = top3.map((g, i) => `
+                <div class="gift-row">
+                    <div class="gift-name">
+                        <div>
+                            <span class="rank">#${i+1}</span>
+                            <span class="name">${g.name}</span>
+                            <button class="info-btn" onclick="showTip('${g.name}')" type="button">?</button>
+                        </div>
+                        <span class="pts">${g.score} / 21</span>
+                    </div>
+                    <div class="bar-track"><div class="bar-fill" style="width:${Math.min(g.score / 21 * 100, 100)}%"></div></div>
+                </div>
+            `).join('');
+
+            document.getElementById('res-gift-extra').innerHTML = extra.length > 0 ?
+                extra.map(g => `<div class="extra-item"><span>${g.name}</span><span class="v">${g.score}</span></div>`).join('') :
+                '<p style="grid-column: span 2; font-size: 0.85rem; color: var(--ink-muted); text-align: center; padding: 0.75rem 0; margin: 0;">15점 이상의 추가 강점은 없습니다.</p>';
+
+            document.getElementById('all-gifts-list').innerHTML = allRes.map(g =>
+                `<div class="all-row"><span>${g.name}</span><span class="v">${g.score}점</span></div>`
+            ).join('');
+
+            document.getElementById('res-vision').innerText = p_ans[0] || '주님의 나라를 세워가는 비전';
+            document.getElementById('res-tags').innerHTML = [...selectedTargets, ...selectedIssues].map(t =>
+                `<span class="tag">#${t}</span>`
+            ).join('') || '<span style="font-size: 0.85rem; color: var(--ink-muted);">선택된 항목이 없습니다.</span>';
+
+            // Sign gifts (yes/no)
+            document.getElementById('res-sign-list').innerHTML = SIGN_Q.map((item, i) => {
+                const yes = sign_ans[i] === 1;
+                return `<div class="sign-item ${yes ? 'yes' : 'no'}">
+                    <span>${item.n}</span>
+                    <span class="sign-status">${yes ? '경험 있음' : '경험 없음'}</span>
+                </div>`;
+            }).join('');
+
+            updateHeaderUI(0);
+            showPage('scr-result');
+
+            // Submit to Google Sheets (admin collection)
+            submitToSheets({
+                timestamp: new Date().toISOString(),
+                name: n, birth: b, phone: p,
+                top3: top3.map(g => `${g.name}(${g.score})`).join(' | '),
+                allGifts: allRes.map(g => `${g.name}:${g.score}`).join(','),
+                style: `${eType}/${oType} · e=${eScore} o=${oScore}`,
+                signGifts: SIGN_Q.map((item, i) => `${item.n}:${sign_ans[i]===1?'Y':'N'}`).join(','),
+                vision: p_ans[0] || '', passion: p_ans.slice(0,6).join(' || '),
+                targets: selectedTargets.join(','), issues: selectedIssues.join(',')
+            });
+        };
+
+        const SHEETS_URL = ''; // ← Google Apps Script 배포 URL을 여기에 붙여 넣으세요
+        function submitToSheets(data) {
+            if(!SHEETS_URL) return;
+            try {
+                fetch(SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(data)
+                });
+            } catch(e) { console.warn('Sheets submit failed:', e); }
+        }
+
+        window.showTip = function(name) {
+            event && event.stopPropagation && event.stopPropagation();
+            document.getElementById('tip-title').innerText = `[${name}] 가이드`;
+            document.getElementById('tip-body').innerText = GIFT_GUIDES[name] || '상담을 통해 더 깊은 의미를 확인해 보세요.';
+            document.getElementById('tooltip-layer').classList.add('open');
+        };
+        window.hideTip = function() {
+            document.getElementById('tooltip-layer').classList.remove('open');
+        };
+
+        function toggleGifts() {
+            const list = document.getElementById('all-gifts-list');
+            list.classList.toggle('open');
+            document.getElementById('arrow-icon').innerText = list.classList.contains('open') ? '▴' : '▾';
+        }
+
+        async function saveAsImage() {
+            const area = document.getElementById('report-area');
+            try { await document.fonts.ready; } catch(e) {}
+            const canvas = await html2canvas(area, { scale: 3, useCORS: true, backgroundColor: '#FFFFFF' });
+            const link = document.createElement('a');
+            link.download = `영적_인바디_리포트_${document.getElementById('res-name').innerText}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function resetAll() {
+            if(!confirm('모든 응답을 지우고 처음부터 다시 시작하시겠습니까?')) return;
+            clearState();
+            cur = 0; p_cur = 0; s_cur = 0; sign_cur = 0; maxIsland = 0;
+            ans = new Array(133).fill(null);
+            p_ans = new Array(8).fill("");
+            s_ans = new Array(14).fill(0);
+            sign_ans = new Array(4).fill(null);
+            selectedTargets = []; selectedIssues = [];
+            updateHeaderUI(0);
+            document.getElementById('resume-area').innerHTML = '';
+            showPage('scr-intro');
+        }
+
+        function goPrev() {
+            const isOn = id => document.getElementById(id) && document.getElementById(id).style.display === 'block';
+            if(currentIsland === 1) {
+                if(p_cur > 0) { p_cur--; renderPassionStep(); }
+                else updateMap(1);
+            } else if(currentIsland === 2) {
+                if(isOn('scr-sign')) {
+                    if(sign_cur > 0) { sign_cur--; renderSign(); }
+                    else { showPage('scr-sign-intro'); }
+                } else if(isOn('scr-sign-intro')) {
+                    renderGift(); showPage('scr-quiz');
+                } else if(cur > 0) { cur--; renderGift(); }
+                else updateMap(2);
+            } else if(currentIsland === 3) {
+                if(s_cur > 0) { s_cur--; renderStyle(); }
+                else updateMap(3);
+            } else {
+                showPage('scr-intro');
+            }
+            saveState();
+        }
+
+        // On load
+        checkResume();
+    </script>
+</body>
+</html>
