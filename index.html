@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>은사 발견 익스페디션 v55</title>
+    <title>나의 열정·은사·스타일 발견 테스트</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -63,7 +63,7 @@
         .gnb-step.locked .gnb-dot { opacity: 0.4; }
         .gnb-line { flex: 1; height: 1.5px; background: var(--line); margin: 0 6px; transition: background 0.4s; }
         .gnb-line.done { background: var(--accent); }
-        .gnb-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 0 0; }
+        .gnb-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0; }
         .gnb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); transition: color 0.2s; }
         .gnb-label.active { color: var(--ink); }
         .gnb-label.done { color: var(--accent); }
@@ -98,18 +98,64 @@
         .scale-btn.active { background: var(--ink); color: var(--surface); border-color: var(--ink); transform: scale(1.1); }
         .scale-labels { display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-mid); padding: 0 4px; }
 
+        .yn-btn { width: 100%; padding: 1.25rem 1.25rem; margin-bottom: 0.6rem; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; color: var(--ink); text-align: center; cursor: pointer; transition: all 0.15s; font-family: inherit; font-size: 1rem; }
+        .yn-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .yn-btn.yes { color: var(--accent-deep); }
+        .yn-btn.no { color: var(--ink-muted); }
+        .yn-btn .sub { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.08em; margin-top: 0.2rem; text-transform: uppercase; }
+
+        .sign-item { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 700; }
+        .sign-item:last-child { margin-bottom: 0; }
+        .sign-item.yes { background: var(--accent-soft); color: var(--accent-deep); }
+        .sign-item.no { background: var(--surface-soft); color: var(--ink-muted); border: 1px solid var(--line-soft); }
+        .sign-item .sign-status { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+        .sign-item .info-btn { background: var(--surface); color: var(--ink-mid); }
+        .sign-item.yes .info-btn { background: var(--surface); color: var(--accent-deep); }
+
         .report { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
         .report-section { padding: 1.75rem 1.5rem; border-bottom: 1px solid var(--line-soft); }
         .report-section:last-child { border-bottom: none; }
         .report-header { background: var(--accent-soft); padding: 2rem 1.5rem; }
         .section-title { font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 1.25rem; }
 
-        .style-row { padding: 0.5rem 0 1.25rem; }
-        .style-row:last-child { padding-bottom: 0; }
-        .style-axis { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--ink-mid); margin-bottom: 0.55rem; }
-        .style-axis .center { font-size: 0.7rem; font-weight: 800; color: var(--accent-deep); background: var(--accent-soft); padding: 3px 10px; border-radius: 99px; }
-        .style-track { position: relative; height: 6px; background: var(--line); border-radius: 3px; }
-        .style-track .dot { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); transform: translate(-50%, -50%); transition: left 1s ease; }
+        .quad-wrap { padding: 0.25rem 0; }
+        .quad-axis-y { text-align: center; font-size: 0.78rem; font-weight: 800; color: var(--ink); padding: 0.4rem 0; letter-spacing: 0.05em; }
+        .quad-row { display: flex; align-items: stretch; gap: 0.5rem; }
+        .quad-axis-x { flex-shrink: 0; font-size: 0.65rem; font-weight: 700; color: var(--ink-mid); width: 1rem; text-align: center; display: flex; align-items: center; justify-content: center; line-height: 1.3; letter-spacing: 0.05em; }
+        .quad-grid {
+            position: relative;
+            flex: 1;
+            aspect-ratio: 1 / 1;
+            background: var(--surface-soft);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            display: grid;
+            grid-template: 1fr 1fr / 1fr 1fr;
+            overflow: hidden;
+        }
+        .quad-cell { display: flex; padding: 0.6rem 0.7rem; font-size: 0.65rem; font-weight: 700; color: var(--ink-muted); letter-spacing: 0.02em; line-height: 1.3; }
+        .quad-cell.tl { align-items: flex-start; justify-content: flex-start; }
+        .quad-cell.tr { align-items: flex-start; justify-content: flex-end; text-align: right; }
+        .quad-cell.bl { align-items: flex-end; justify-content: flex-start; }
+        .quad-cell.br { align-items: flex-end; justify-content: flex-end; text-align: right; }
+        .quad-cross-h { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--line); z-index: 1; }
+        .quad-cross-v { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--line); z-index: 1; }
+        .quad-dot {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--surface);
+            box-shadow: 0 0 0 1.5px var(--accent), 0 4px 10px rgba(198,110,71,0.35);
+            transform: translate(-50%, -50%);
+            transition: top 1s ease, left 1s ease;
+            z-index: 3;
+        }
+        .quad-summary-wrap { text-align: center; margin-top: 1rem; }
+        .quad-summary { display: inline-block; padding: 7px 14px; background: var(--accent-soft); color: var(--accent-deep); border-radius: 99px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.02em; }
+        .quad-sep { margin: 0 0.5rem; opacity: 0.5; }
+        .quad-guide { margin: 0.85rem 0 0; font-size: 0.75rem; line-height: 1.7; color: var(--ink-muted); text-align: center; font-weight: 500; }
 
         .gift-row { margin-bottom: 1.1rem; }
         .gift-row:last-child { margin-bottom: 0; }
@@ -137,12 +183,6 @@
 
         .tag { display: inline-block; padding: 6px 12px; background: var(--accent-soft); color: var(--accent-deep); border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin: 0 4px 6px 0; }
 
-        .dept-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--surface-soft); border: 1px solid var(--line-soft); border-radius: 14px; margin-bottom: 0.55rem; }
-        .dept-card:last-child { margin-bottom: 0; }
-        .dept-name { font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
-        .dept-meta { font-size: 0.7rem; color: var(--ink-muted); font-weight: 600; }
-        .dept-fit { font-size: 0.65rem; font-weight: 800; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; }
-
         .stage-row { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line-soft); }
         .stage-row:last-child { border-bottom: none; }
         .stage-num { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--ink-muted); flex-shrink: 0; font-size: 0.9rem; }
@@ -153,27 +193,24 @@
         .stage-step { font-size: 0.7rem; color: var(--ink-muted); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
         .stage-desc { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.2rem; }
 
-        .yn-btn { width: 100%; padding: 1.25rem 1.25rem; margin-bottom: 0.6rem; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-weight: 700; color: var(--ink); text-align: center; cursor: pointer; transition: all 0.15s; font-family: inherit; font-size: 1rem; }
-        .yn-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
-        .yn-btn.yes { color: var(--accent-deep); }
-        .yn-btn.no { color: var(--ink-muted); }
-        .yn-btn .sub { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ink-muted); letter-spacing: 0.08em; margin-top: 0.2rem; text-transform: uppercase; }
-
-        .sign-item { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 700; }
-        .sign-item:last-child { margin-bottom: 0; }
-        .sign-item.yes { background: var(--accent-soft); color: var(--accent-deep); }
-        .sign-item.no { background: var(--surface-soft); color: var(--ink-muted); border: 1px solid var(--line-soft); }
-        .sign-item .sign-status { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-
         .rest-card { background: var(--accent-soft); border-radius: 18px; padding: 2rem 1.5rem; }
         .rest-verse { font-size: 1rem; font-weight: 700; line-height: 1.75; color: var(--accent-deep); font-style: italic; margin: 0 0 1rem; }
         .rest-comment { font-size: 0.92rem; line-height: 1.75; color: var(--ink-mid); margin: 0; }
 
         .tip-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.45); display: none; align-items: center; justify-content: center; z-index: 100; padding: 1.5rem; }
         .tip-overlay.open { display: flex; }
-        .tip-modal { background: var(--surface); border-radius: 18px; padding: 1.75rem; max-width: 360px; width: 100%; }
-        .tip-modal h4 { font-size: 0.95rem; font-weight: 800; color: var(--accent-deep); margin: 0 0 0.75rem; }
-        .tip-modal p { font-size: 0.9rem; line-height: 1.75; color: var(--ink-mid); margin: 0 0 1.25rem; }
+        .tip-modal { background: var(--surface); border-radius: 18px; padding: 1.75rem; max-width: 380px; width: 100%; display: flex; flex-direction: column; max-height: 82vh; }
+        .tip-modal h4 { font-size: 1rem; font-weight: 800; color: var(--ink); margin: 0 0 1rem; flex-shrink: 0; }
+        .tip-body-scroll { overflow-y: auto; flex: 1 1 auto; min-height: 0; margin-bottom: 1.25rem; padding-right: 0.25rem; }
+        #tip-body { font-size: 0.9rem; line-height: 1.75; color: var(--ink-mid); }
+        .tip-modal .tip-h { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); margin: 1.1rem 0 0.55rem; }
+        .tip-modal .tip-h:first-child { margin-top: 0; }
+        .tip-modal .tip-list { margin: 0; padding-left: 1.15rem; font-size: 0.88rem; line-height: 1.7; color: var(--ink-mid); }
+        .tip-modal .tip-list li { margin-bottom: 0.45rem; }
+        .tip-modal .tip-list li:last-child { margin-bottom: 0; }
+        .tip-modal .tip-note { font-size: 0.85rem; color: var(--ink-muted); font-style: italic; margin: 0; }
+        .tip-modal .tip-verses { font-size: 0.9rem; line-height: 1.85; color: var(--accent-deep); font-weight: 700; margin: 0; letter-spacing: 0.01em; }
+        .tip-modal button { flex-shrink: 0; }
 
         .resume-banner { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--accent-deep); display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
         .resume-banner button { font-size: 0.78rem; font-weight: 700; padding: 0.5rem 0.85rem; background: var(--ink); color: var(--surface); border: none; border-radius: 8px; cursor: pointer; font-family: inherit; }
@@ -319,21 +356,28 @@
                     </div>
                     <div class="report-section">
                         <div class="section-title">Ministry Style</div>
-                        <div class="style-row">
-                            <div class="style-axis">
-                                <span>일 중심</span>
-                                <span class="center" id="res-style-e-text"></span>
-                                <span>사람 중심</span>
+                        <div class="quad-wrap">
+                            <div class="quad-axis-y top">일 중심</div>
+                            <div class="quad-row">
+                                <div class="quad-axis-x">유<br>연<br>한</div>
+                                <div class="quad-grid">
+                                    <div class="quad-cell tl"><span>일·유연한</span></div>
+                                    <div class="quad-cell tr"><span>일·체계적인</span></div>
+                                    <div class="quad-cell bl"><span>관계·유연한</span></div>
+                                    <div class="quad-cell br"><span>관계·체계적인</span></div>
+                                    <div class="quad-cross-h"></div>
+                                    <div class="quad-cross-v"></div>
+                                    <div class="quad-dot" id="quad-dot"></div>
+                                </div>
+                                <div class="quad-axis-x">체<br>계<br>적<br>인</div>
                             </div>
-                            <div class="style-track"><div id="res-dot-e" class="dot"></div></div>
-                        </div>
-                        <div class="style-row">
-                            <div class="style-axis">
-                                <span>유연함</span>
-                                <span class="center" id="res-style-o-text"></span>
-                                <span>계획적</span>
+                            <div class="quad-axis-y bottom">관계 중심</div>
+                            <div class="quad-summary-wrap">
+                                <span class="quad-summary">
+                                    <span id="quad-text-e"></span><span class="quad-sep">·</span><span id="quad-text-o"></span>
+                                </span>
+                                <p class="quad-guide">7점에 가까울수록 일 중심, 유연한 스타일<br>35점에 가까울수록 관계 중심, 체계적인 스타일입니다</p>
                             </div>
-                            <div class="style-track"><div id="res-dot-o" class="dot"></div></div>
                         </div>
                     </div>
                     <div class="report-section">
@@ -367,41 +411,99 @@
     <div id="tooltip-layer" class="tip-overlay" onclick="hideTip()">
         <div class="tip-modal" onclick="event.stopPropagation()">
             <h4 id="tip-title"></h4>
-            <p id="tip-body"></p>
+            <div class="tip-body-scroll"><div id="tip-body"></div></div>
             <button class="btn btn-secondary" onclick="hideTip()" style="padding: 0.7rem;">닫기</button>
         </div>
     </div>
 
     <script>
-        const Q_DATA = ["교회의 한 기관이나 한 행사를 맡아서 총괄 계획하고 편성 진행하는 일을 잘 한다.", "피부색이나 문화권이 다르더라도 잘 어울려 살 수 있다.", "물건을 잘 만지며 고치고 관리하는 일이 어렵지 않다.", "하나님에 대한 나의 생각과 느낌을 예술의 형태를 이용하여 표현하는 것을 좋아한다.", "영적인 것처럼 들리는 말에 숨어있는 잘못된 동기들을 알아챈 적이 자주 있다.", "나는 다른 사람이 곤란과 좌절에서 벗어날 수 있도록 격려하고 돕는다.", "나와 예수 그리스도의 관계에 대하여 불신자들과 말하는 것이 어렵지 않다.", "다른 성도들이 불가능하다고 생각하는 일을 위해 기도하면서 믿고 행동하는 것이 자연스럽다.", "주님으로 인해 나의 돈과 소유물을 나누어 주는 일이 자주 있다.", "앞장서서 사역하는 사람들을 뒤에서 보이지 않게 돕는 것을 잘한다.", "불시에 찾아오는 손님들도 반갑게 맞이하고 음식과 잠자리를 제공하는 것이 기쁘다.", "기도 부탁을 받으면 이를 위해 쉬지 않고 기도한다.", "성경의 요점과 중심사상을 이해하도록 내가 돕고 있다고 사람들은 내게 말한다.", "다른 사람들이 자신의 목표를 달성할 수 있도록 고무시킬 수 있다.", "몸과 마음의 장애로 고통받는 사람들과 공감하며 도움을 주려고 애쓴다.", "사람들로 하여금 자신의 잘못을 깨닫고 삶의 변화를 가져오도록 얘기해 줄 수 있다.", "남을 돌보거나 양육하는 일에 자원해서 시간을 쓴다.", "하나님의 말씀을 효과적으로 전할 수 있다.", "개인적인 다양한 삶의 문제나 혹은 영적인 문제에 관한 충고의 부탁을 종종 받는다.", "체계적으로 세부적인 면을 다루는 데 철저하고 신중하며 능숙하다.", "다른 나라나 지역, 다른 인종 공동체에서 사역하는 일에 흥미도 있고 도울 수 있다.", "여러 종류의 연장을 잘 다룬다.", "미술, 연극, 음악, 사진 등의 예술적인 기술을 개발하고 사용하는 것을 좋아한다.", "첫인상으로 사람들의 성격을 잘 파악한다.", "낙심한 사람들을 격려하고 자신감을 회복시켜 주기를 좋아한다.", "불신자들과 사귈 수 있는 기회를 항상 찾는다.", "환란 중에서도 하나님께서 도우시고 공급하시는 것을 확신한다.", "하나님 나라의 사역을 위해 십일조 이상의 헌금을 한다.", "큰일 뒤에 소홀히 여길 수 있는 세부적이고 일상적인 일들이 눈에 잘 띈다.", "새로운 사람들을 만나고 그들이 환영받는다는 느낌을 주는 일들이 즐겁다.", "오랫동안 기도하며 하나님이 원하시는 기도를 하도록 인도하여 주시는 것을 자주 경험한다.", "자연적으로 알 수 없는 어떠한 사실을 성령님으로부터 받아 알게 될 때가 있다.", "다른 이들이 목표를 달성할 수 있도록 영향을 줄 수 있다.", "어려움을 겪고 있는 이들이 다시 안정을 되찾는 동안 인내심을 가지고 도울 수 있다.", "다른 사람들에게 진실을 밝히게 하는 것이 나의 의무라는 느낌을 받는다.", "방황하고 있는 신자들을 동정하며 그들을 감싸주고 책임져주고 싶다.", "진리가 사람의 삶에 변화를 가져올 수 있는 것을 알기 때문에 배우는데 시간을 투자할 수 있다.", "갈등이나 혼돈 가운데서 종종 간단하고도 실질적인 해결책을 발견할 때가 많다.", "어떤 목표를 세우고 이를 이루기 위한 계획이나 방안을 수립할 수 있다.", "개척교회같이 새롭게 출발하는 사역을 세우는 데 기꺼이 일익을 담당할 수 있다.", "사역에 필요한 물건을 만들기를 좋아한다.", "사람들이 자기 자신에 대한 이해, 사람들과의 관계, 그리고 하나님에 관해 보다 잘 이해할 수 있도록 예술적 표현을 통해서 돕는다.", "다른 사람들보다 먼저 거짓이나 가식을 잘 꿰뚫어 볼 수 있다.", "다른 사람들에게 하나님의 약속을 상기시켜 줌으로써 소망을 얻게 한다.", "복음의 핵심을 개인의 필요에 따라 적절히 응용하는 일을 잘 한다.", "큰 일을 성취하도록 하나님이 나를 도우시리라고 확신한다.", "더 많은 구제헌금을 하기 위해 돈 관리를 잘 한다.", "다른 사람들을 돕기 위해 기꺼이 교회 안팎의 잡일들을 스스로 하게 된다.", "다른 사람과 연결이 필요한 사람들을 하나님께서 내게로 보내신다고 진심으로 믿는다.", "나는 기도할 때 이 일이 다른 사람을 위해 중요한 사역하는 것이라고 인식한다.", "성경을 정확하고 온전히 이해하기 위하여 성경을 읽고 공부하는 일이 즐겁고 그런 일을 위해 시간을 따로 할당한다.", "다른 사람들이 능력을 최대한 발휘할 수 있게 하기 위해 필요에 따라 지도방법을 변경시킬 수 있다.", "구제불능 또는 가치가 없다고 여겨지는 사람들을 돕는 일이 즐겁다.", "성경적 원리에 어긋나는 문화적 추세나 가르침, 행사들을 담대하게 지적한다.", "그리스도인의 모임을 영적으로 인도하고 방향을 제시해 주는 일이 그리 두렵지 않고 사람들도 나를 신뢰하며 주의깊게 듣고 행하는 편이다.", "가르치는 사람의 말, 어구, 내용 등에 대해 세심히 관심을 집중한다.", "여러 가능한 방안 중에서 가장 효과적인 방안을 쉽게 골라낼 수 있다.", "어떤 일을 하는 데 필요한 자원을 찾아내고 활용하는 일을 할 수 있다.", "다른 문화나 새롭게 바뀌어진 환경에서 일 할 때 잘 적응한다.", "어떤 것을 만들기 이전에 이것이 어떻게 완성되어질 것인가를 쉽게 연상해 볼 수 있다.", "주님을 전할 수 있는 새롭고 참신한 방법(드라마, 음악, 그림, 그래픽)을 찾기 좋아한다.", "어떤 상황에서 옳고 그름을 잘 분간하는 편이다.", "믿음 생활, 가정 생활 또는 전체 삶 가운데 용단을 내려야 할 필요가 있는 사람들에게 그렇게 하는 것에 대한 확신을 줄 수 있다.", "믿지 않는 이들에게 주님을 영접하도록 권한다.", "인간의 노력만으로는 성공이 보장되지 상황에서 하나님을 의지한다.", "소득의 더 많은 부분을 헌금할 수 있도록 내 생활 방식을 절제해야겠다는 도전을 받는다.", "실제적인 작은 일 가운데서 영적인 의미를 발견한다.", "사람들이 외롭지 않다는 느낌을 가질 수 있는 장소를 만들고 싶다.", "기도에 응답하시는 하나님이신 것을 믿기 때문에 확신을 가지고 계속 기도한다.", "통찰력이 있고 진실을 금방 알 수 있다.", "목표를 세우고 이를 이루기 위해 사람이나 자원을 효과적으로 잘 사용한다.", "고통받고 있는 사람들에게 커다란 연민의 감정을 느껴서 고통스럽다.", "대부분의 행동을 옳고 그름의 견지에서 보게 되는 때가 많으며, 그릇된 것을 바로 잡아야 하겠다는 필요를 절실히 느낀다.", "내가 맡은 그리스도인 모임의 영적인 건강을 책임지는 일이 즐겁다.", "내가 알고 있는 것을 재미있게 전할 수 있는 능력이 있는 것 같다.", "누군가가 문제에 봉착하면 나는 그들에게 가장 성서적인 해결책을 제시한다.", "어떤 기관이나 사역이 보다 효과적이고 효율적으로 될 수 있는 방안을 늘 중요시한다.", "새로운 사람들을 대할 때 그들의 문화에 대해 빨리 이해하고 세심한 배려를 할 수 있다.", "나의 손재주 통해 사람들을 돕고 하나님의 일에 활력을 불어넣는다.", "하나님의 진리를 전하기 위해 여러 형태의 예술을 도입한다.", "나의 통찰력이나 관찰력을 사람들이 인정한다.", "믿음이 흔들리고 있는 이들을 크게 위로하며 강건케 한다.", "내가 기독교인인 것을 드러내고 말하며 불신자들이 내 믿음에 관해 물어오기를 원한다.", "하나님이 내 삶 속에 매일 함께 하시며 역사하시는 것을 확신한다.", "하나님의 일을 하는 사람들의 삶과 사역에 내 헌금이 큰 도움이 된다는 것을 늘 감사한다.", "해야 할 잡다한 일들을 잘 찾아내며 부탁 받지 않더라도 종종 그러한 일들을 하곤 한다.", "사람들 접대하기를 좋아하며 내 집을 다른 사람들에게 제공한다.", "도움이 필요한 경우의 이야기를 들으면 기도해야 되겠다는 강한 느낌을 받는다.", "교회 지체들 안에 매우 유용한 사실이 나중에 입증되는 어떤 생각을 내가 가장 먼저 추진한 적이 있다.", "자신의 능력을 최대한 발휘하도록 다른 이들에게 영향을 준다.", "어떤 사람의 고난이나 문제 이면에 하나님께서 진정 중요하게 여기시는 삶이 있는 것을 알 수 있다.", "정직하고 바른 말을 하는 사람들을 좋아한다.", "맡겨진 소그룹의 사람들에게 도움을 주고 지침을 주는 것을 즐긴다.", "사람들로 하여금 더 배우고 공부하고 싶은 마음이 생기도록 말씀을 통하여 도전을 줄 수 있다.", "복잡한 문제를 해결할 수 있는 실질적인 조언을 준다.", "한 기관이 어떻게 운영되고 있는지 구조나 조직을 배우기를 좋아한다.", "새로운 일을 시작할 때 오히려 호기심과 창의성이 생기며 좋아한다.", "손으로 하는 일을 잘하며 좋아한다.", "창조적이며 상상력이 풍부하다.", "성경에 위배되는 가르침이나 설교, 말씀을 분간할 수 있다.", "영적인 성장을 위해 무언가 하고 싶은 마음을 사람들에게 불어 넣기를 좋아한다.", "불신자들에게 예수님이 내게 어떠한 일을 하셨는지 담대하게 자주 말한다.", "다른 이들이 하나님을 신뢰하도록 계속 도전을 준다.", "청지기로서의 삶에 대한 결단을 통해서 풍성히 헌금한다.", "남들이 좀 더 효과적으로 일할 수 있도록 뒤에서 돕는 보조자의 역할도 기꺼이 자주 한다.", "다른 이들이 소속감을 느낄 수 있도록 힘껏 노력한다.", "기도 부탁을 받으면 영광으로 생각한다.", "말씀을 읽거나 공부할 때 그리스도의 몸에 속한 다른 이들에게 유익을 주는 성경적인 진리를 발견하게 된다.", "다른 이들이 공감하는 비전을 제시할 수 있다.", "어려운 상황 중에 있는 사람들에게 소망과 기쁨을 주기를 좋아한다.", "쉽게 받아들여지지 않거나 잘 환영을 받지 않는 장소에서라도 하나님의 진리를 선포하겠다.", "방황하는 신자들이 성도의 교제와 믿음을 되찾을 수 있도록 자연스럽게 인도할 수 있다.", "어떤 지식이나 기술을 상대방이 알아듣고 적용하기 쉽게 가르쳐 줄 수 있다.", "사람들이 실제 도움이 된다고 여겨지도록 성경의 진리를 적용할 수 있는 말을 해준다.", "앞의 행사를 미리 그려보고 가능한 문제들을 예상하여 대안을 만들어 낼 수 있다.", "교회의 여러 사역을 총괄 지휘할 수 있다.", "다른 문화권이나 다른 지역의 사람들에게 복음을 전하는 일에 깊은 열망을 가지고 있다.", "사역이나 교회에 도움이 되는 물건을 구상하고 만들 수 있다.", "명상하며 상상력이 키우기 위한 혼자만의 시간이 가끔 필요하다.", "어떤 사람이나 환경에서 마귀가 역사하고 있음을 잘 감지할 수 있다.", "사람들을 영적으로 성장시키기 위해 도전을 주거나 꾸짖어 바로 세울 수 있다.", "믿지 않는 사람들과 영적인 문제에 관한 얘기할 수 있는 기회를 찾는다.", "하나님이 축복하시는 일이라고 생각하면 반대나 비협조를 무릅쓰고라도 추진할 수 있다.", "하나님의 일을 위해 더 많이 드리기 위하여 내게 자원을 허락하셨다고 믿는다.", "도움이 필요할 때마다 선천적인 혹은 후천적인 기술을 늘 기꺼이 사용한다.", "낯선 환경 중에서라도 사람들로 하여금 편안하게 느낄 수 있도록 만들 수 있도록 만들 수 있다.", "내 기도의 직접적인 응답으로 구체적인 결과가 오는 것을 자주 본다.", "나는 성경적인 진리를 알기 위해서 많은 독서와 공부를 한다.", "목적지가 어딘지를 파악하고 사람들이 그곳에 도달할 수 있도록 잘 돕는다.", "어려워서 도움이 필요한 사람들에게 실제적인 도움을 주는 것을 좋아한다.", "죄를 볼 때마다 이것을 드러내고 그들이 회개하도록 도전하지 않으면 안 된다고 느끼며 행동한다.", "사람들이 신자로서 성장할 수 있도록 참을성 있게 그러나 흔들림 없이 양육하는 것을 좋아한다.", "다른 이들이 영적으로 또한 개인적으로 성장할 수 있도록 어떤 일들을 설명해 주는 것을 좋아한다.", "다른 사람들이 보지 못하는 문제의 해결책에 대한 통찰력이 있다."];
-        const GIFTS = [{n:"다스림"},{n:"사도"},{n:"재주"},{n:"예능/창의"},{n:"영분별"},{n:"권면/위로"},{n:"전도"},{n:"믿음"},{n:"구제/헌금"},{n:"돕는 은사"},{n:"대접/친절"},{n:"중보기도"},{n:"지식"},{n:"지도력"},{n:"긍휼"},{n:"예언"},{n:"목양"},{n:"가르침"},{n:"지혜"}];
+        const Q_DATA = ["교회의 한 기관이나 한 행사를 맡아서 총괄 계획하고 편성 진행하는 일을 잘 한다.", "피부색이나 문화권이 다르더라도 잘 어울려 살 수 있다.", "물건을 잘 만지며 고치고 관리하는 일이 어렵지 않다.", "하나님에 대한 나의 생각과 느낌을 예술의 형태를 이용하여 표현하는 것을 좋아한다.", "영적인 것처럼 들리는 말에 숨어있는 잘못된 동기들을 알아챈 적이 자주 있다.", "나는 다른 사람이 곤란과 좌절에서 벗어날 수 있도록 격려하고 돕는다.", "나와 예수 그리스도의 관계에 대하여 불신자들과 말하는 것이 어렵지 않다.", "다른 성도들이 불가능하다고 생각하는 일을 위해 기도하면서 믿고 행동하는 것이 자연스럽다.", "주님으로 인해 나의 돈과 소유물을 나누어 주는 일이 자주 있다.", "앞장서서 사역하는 사람들을 뒤에서 보이지 않게 돕는 것을 잘한다.", "불시에 찾아오는 손님들도 반갑게 맞이하고 음식과 잠자리를 제공하는 것이 기쁘다.", "기도 부탁을 받으면 이를 위해 쉬지 않고 기도한다.", "성경의 요점과 중심사상을 이해하도록 내가 돕고 있다고 사람들은 내게 말한다.", "다른 사람들이 자신의 목표를 달성할 수 있도록 고무시킬 수 있다.", "몸과 마음의 장애로 고통받는 사람들과 공감하며 도움을 주려고 애쓴다.", "사람들로 하여금 자신의 잘못을 깨닫고 삶의 변화를 가져오도록 얘기해 줄 수 있다.", "남을 돌보거나 양육하는 일에 자원해서 시간을 쓴다.", "하나님의 말씀을 효과적으로 전할 수 있다.", "개인적인 다양한 삶의 문제나 혹은 영적인 문제에 관한 충고의 부탁을 종종 받는다.", "체계적으로 세부적인 면을 다루는 데 철저하고 신중하며 능숙하다.", "다른 나라나 지역, 다른 인종 공동체에서 사역하는 일에 흥미도 있고 도울 수 있다.", "여러 종류의 연장을 잘 다룬다.", "미술, 연극, 음악, 사진 등의 예술적인 기술을 개발하고 사용하는 것을 좋아한다.", "첫인상으로 사람들의 성격을 잘 파악한다.", "낙심한 사람들을 격려하고 자신감을 회복시켜 주기를 좋아한다.", "불신자들과 사귈 수 있는 기회를 항상 찾는다.", "환란 중에서도 하나님께서 도우시고 공급하시는 것을 확신한다.", "하나님 나라의 사역을 위해 십일조 이상의 헌금을 한다.", "큰일 뒤에 소홀히 여길 수 있는 세부적이고 일상적인 일들이 눈에 잘 띈다.", "새로운 사람들을 만나고 그들이 환영받는다는 느낌을 주는 일들이 즐겁다.", "오랫동안 기도하며 하나님이 원하시는 기도를 하도록 인도하여 주시는 것을 자주 경험한다.", "자연적으로 알 수 없는 어떠한 사실을 성령님으로부터 받아 알게 될 때가 있다.", "다른 이들이 목표를 달성할 수 있도록 영향을 줄 수 있다.", "어려움을 겪고 있는 이들이 다시 안정을 되찾는 동안 인내심을 가지고 도울 수 있다.", "다른 사람들에게 진실을 밝히게 하는 것이 나의 의무라는 느낌을 받는다.", "방황하고 있는 신자들을 동정하며 그들을 감싸주고 책임져주고 싶다.", "진리가 사람의 삶에 변화를 가져올 수 있는 것을 알기 때문에 배우는데 시간을 투자할 수 있다.", "갈등이나 혼돈 가운데서 종종 간단하고도 실질적인 해결책을 발견할 때가 많다.", "어떤 목표를 세우고 이를 이루기 위한 계획이나 방안을 수립할 수 있다.", "개척교회같이 새롭게 출발하는 사역을 세우는 데 기꺼이 일익을 담당할 수 있다.", "사역에 필요한 물건을 만들기를 좋아한다.", "사람들이 자기 자신에 대한 이해, 사람들과의 관계, 그리고 하나님에 관해 보다 잘 이해할 수 있도록 예술적 표현을 통해서 돕는다.", "다른 사람들보다 먼저 거짓이나 가식을 잘 꿰뚫어 볼 수 있다.", "다른 사람들에게 하나님의 약속을 상기시켜 줌으로써 소망을 얻게 한다.", "복음의 핵심을 개인의 필요에 따라 적절히 응용하는 일을 잘 한다.", "큰 일을 성취하도록 하나님이 나를 도우시리라고 확신한다.", "더 많은 구제헌금을 하기 위해 돈 관리를 잘 한다.", "다른 사람들을 돕기 위해 기꺼이 교회 안팎의 잡일들을 스스로 하게 된다.", "다른 사람과 연결이 필요한 사람들을 하나님께서 내게로 보내신다고 진심으로 믿는다.", "나는 기도할 때 이 일이 다른 사람을 위해 중요한 사역하는 것이라고 인식한다.", "성경을 정확하고 온전히 이해하기 위하여 성경을 읽고 공부하는 일이 즐겁고 그런 일을 위해 시간을 따로 할당한다.", "다른 사람들이 능력을 최대한 발휘할 수 있게 하기 위해 필요에 따라 지도방법을 변경시킬 수 있다.", "구제불능 또는 가치가 없다고 여겨지는 사람들을 돕는 일이 즐겁다.", "성경적 원리에 어긋나는 문화적 추세나 가르침, 행사들을 담대하게 지적한다.", "그리스도인의 모임을 영적으로 인도하고 방향을 제시해 주는 일이 그리 두렵지 않고 사람들도 나를 신뢰하며 주의깊게 듣고 행하는 편이다.", "가르치는 사람의 말, 어구, 내용 등에 대해 세심히 관심을 집중한다.", "여러 가능한 방안 중에서 가장 효과적인 방안을 쉽게 골라낼 수 있다.", "어떤 일을 하는 데 필요한 자원을 찾아내고 활용하는 일을 할 수 있다.", "다른 문화나 새롭게 바뀌어진 환경에서 일 할 때 잘 적응한다.", "어떤 것을 만들기 이전에 이것이 어떻게 완성되어질 것인가를 쉽게 연상해 볼 수 있다.", "주님을 전할 수 있는 새롭고 참신한 방법(드라마, 음악, 그림, 그래픽)을 찾기 좋아한다.", "어떤 상황에서 옳고 그름을 잘 분간하는 편이다.", "믿음 생활, 가정 생활 또는 전체 삶 가운데 용단을 내려야 할 필요가 있는 사람들에게 그렇게 하는 것에 대한 확신을 줄 수 있다.", "믿지 않는 이들에게 주님을 영접하도록 권한다.", "인간의 노력만으로는 성공이 보장되지 않은 상황에서 하나님을 의지한다.", "소득의 더 많은 부분을 헌금할 수 있도록 내 생활 방식을 절제해야겠다는 도전을 받는다.", "실제적인 작은 일 가운데서 영적인 의미를 발견한다.", "사람들이 외롭지 않다는 느낌을 가질 수 있는 장소를 만들고 싶다.", "기도에 응답하시는 하나님이신 것을 믿기 때문에 확신을 가지고 계속 기도한다.", "통찰력이 있고 진실을 금방 알 수 있다.", "목표를 세우고 이를 이루기 위해 사람이나 자원을 효과적으로 잘 사용한다.", "고통받고 있는 사람들에게 커다란 연민의 감정을 느껴서 고통스럽다.", "대부분의 행동을 옳고 그름의 견지에서 보게 되는 때가 많으며, 그릇된 것을 바로 잡아야 하겠다는 필요를 절실히 느낀다.", "내가 맡은 그리스도인 모임의 영적인 건강을 책임지는 일이 즐겁다.", "내가 알고 있는 것을 재미있게 전할 수 있는 능력이 있는 것 같다.", "누군가가 문제에 봉착하면 나는 그들에게 가장 성서적인 해결책을 제시한다.", "어떤 기관이나 사역이 보다 효과적이고 효율적으로 될 수 있는 방안을 늘 중요시한다.", "새로운 사람들을 대할 때 그들의 문화에 대해 빨리 이해하고 세심한 배려를 할 수 있다.", "나의 손재주를 통해 사람들을 돕고 하나님의 일에 활력을 불어넣는다.", "하나님의 진리를 전하기 위해 여러 형태의 예술을 도입한다.", "나의 통찰력이나 관찰력을 사람들이 인정한다.", "믿음이 흔들리고 있는 이들을 크게 위로하며 강건케 한다.", "내가 기독교인인 것을 드러내고 말하며 불신자들이 내 믿음에 관해 물어오기를 원한다.", "하나님이 내 삶 속에 매일 함께 하시며 역사하시는 것을 확신한다.", "하나님의 일을 하는 사람들의 삶과 사역에 내 헌금이 큰 도움이 된다는 것을 늘 감사한다.", "해야 할 잡다한 일들을 잘 찾아내며 부탁 받지 않더라도 종종 그러한 일들을 하곤 한다.", "사람들 접대하기를 좋아하며 내 집을 다른 사람들에게 제공한다.", "도움이 필요한 경우의 이야기를 들으면 기도해야 되겠다는 강한 느낌을 받는다.", "교회 지체들 안에 매우 유용한 사실이 나중에 입증되는 어떤 생각을 내가 가장 먼저 추진한 적이 있다.", "자신의 능력을 최대한 발휘하도록 다른 이들에게 영향을 준다.", "어떤 사람의 고난이나 문제 이면에 하나님께서 진정 중요하게 여기시는 삶이 있는 것을 알 수 있다.", "정직하고 바른 말을 하는 사람들을 좋아한다.", "맡겨진 소그룹의 사람들에게 도움을 주고 지침을 주는 것을 즐긴다.", "사람들로 하여금 더 배우고 공부하고 싶은 마음이 생기도록 말씀을 통하여 도전을 줄 수 있다.", "복잡한 문제를 해결할 수 있는 실질적인 조언을 준다.", "한 기관이 어떻게 운영되고 있는지 구조나 조직을 배우기를 좋아한다.", "새로운 일을 시작할 때 오히려 호기심과 창의성이 생기며 좋아한다.", "손으로 하는 일을 잘하며 좋아한다.", "창조적이며 상상력이 풍부하다.", "성경에 위배되는 가르침이나 설교, 말씀을 분간할 수 있다.", "영적인 성장을 위해 무언가 하고 싶은 마음을 사람들에게 불어 넣기를 좋아한다.", "불신자들에게 예수님이 내게 어떠한 일을 하셨는지 담대하게 자주 말한다.", "다른 이들이 하나님을 신뢰하도록 계속 도전을 준다.", "청지기로서의 삶에 대한 결단을 통해서 풍성히 헌금한다.", "남들이 좀 더 효과적으로 일할 수 있도록 뒤에서 돕는 보조자의 역할도 기꺼이 자주 한다.", "다른 이들이 소속감을 느낄 수 있도록 힘껏 노력한다.", "기도 부탁을 받으면 영광으로 생각한다.", "말씀을 읽거나 공부할 때 그리스도의 몸에 속한 다른 이들에게 유익을 주는 성경적인 진리를 발견하게 된다.", "다른 이들이 공감하는 비전을 제시할 수 있다.", "어려운 상황 중에 있는 사람들에게 소망과 기쁨을 주기를 좋아한다.", "쉽게 받아들여지지 않거나 잘 환영을 받지 않는 장소에서라도 하나님의 진리를 선포하겠다.", "방황하는 신자들이 성도의 교제와 믿음을 되찾을 수 있도록 자연스럽게 인도할 수 있다.", "어떤 지식이나 기술을 상대방이 알아듣고 적용하기 쉽게 가르쳐 줄 수 있다.", "사람들이 실제 도움이 된다고 여겨지도록 성경의 진리를 적용할 수 있는 말을 해준다.", "앞의 행사를 미리 그려보고 가능한 문제들을 예상하여 대안을 만들어 낼 수 있다.", "교회의 여러 사역을 총괄 지휘할 수 있다.", "다른 문화권이나 다른 지역의 사람들에게 복음을 전하는 일에 깊은 열망을 가지고 있다.", "사역이나 교회에 도움이 되는 물건을 구상하고 만들 수 있다.", "명상하며 상상력이 키우기 위한 혼자만의 시간이 가끔 필요하다.", "어떤 사람이나 환경에서 마귀가 역사하고 있음을 잘 감지할 수 있다.", "사람들을 영적으로 성장시키기 위해 도전을 주거나 꾸짖어 바로 세울 수 있다.", "믿지 않는 사람들과 영적인 문제에 관한 얘기할 수 있는 기회를 찾는다.", "하나님이 축복하시는 일이라고 생각하면 반대나 비협조를 무릅쓰고라도 추진할 수 있다.", "하나님의 일을 위해 더 많이 드리기 위하여 내게 자원을 허락하셨다고 믿는다.", "도움이 필요할 때마다 선천적인 혹은 후천적인 기술을 늘 기꺼이 사용한다.", "낯선 환경 중에서라도 사람들로 하여금 편안하게 느낄 수 있도록 만들 수 있도록 만들 수 있다.", "내 기도의 직접적인 응답으로 구체적인 결과가 오는 것을 자주 본다.", "나는 성경적인 진리를 알기 위해서 많은 독서와 공부를 한다.", "목적지가 어딘지를 파악하고 사람들이 그곳에 도달할 수 있도록 잘 돕는다.", "어려워서 도움이 필요한 사람들에게 실제적인 도움을 주는 것을 좋아한다.", "죄를 볼 때마다 이것을 드러내고 그들이 회개하도록 도전하지 않으면 안 된다고 느끼며 행동한다.", "사람들이 신자로서 성장할 수 있도록 참을성 있게 그러나 흔들림 없이 양육하는 것을 좋아한다.", "다른 이들이 영적으로 또한 개인적으로 성장할 수 있도록 어떤 일들을 설명해 주는 것을 좋아한다.", "다른 사람들이 보지 못하는 문제의 해결책에 대한 통찰력이 있다."];
+        const GIFTS = [{n:"다스림"},{n:"사도"},{n:"재주"},{n:"창의적 전달"},{n:"영분별"},{n:"권면과 위로"},{n:"전도"},{n:"믿음"},{n:"구제"},{n:"돕는 은사"},{n:"대접"},{n:"중보기도"},{n:"지식"},{n:"지도력"},{n:"긍휼"},{n:"예언"},{n:"목양"},{n:"가르침"},{n:"지혜"}];
         const SIGN_Q = [
-            {n:"치유의 은사", q:"내가 누군가에게 손을 얹고 기도할 때, 즉각적인 치유가 반복적으로 일어나는 것을 경험한 적이 있다."},
-            {n:"방언 통역의 은사", q:"사람들이 방언으로 말하는 것을 들을 때, 성령께서 그 메시지를 내게 드러내 주시는 것을 느끼며, 나는 그것을 교회를 위해 통역하여 말한 적이 있다."},
-            {n:"능력 행함의 은사", q:"내 안에서 역사하시는 하나님의 능력을 통해 귀신을 쫓아내고 병든 자를 치유하는 것을 경험했으며, 자연 가운데 나타나는 하나님의 초자연적인 개입을 본 적이 있다."},
-            {n:"방언의 은사", q:"내가 이해하지 못하는 언어로 말한 적이 있으며, 그때 누군가가 내가 방금 한 말을 통역하여 전한 적이 있다."}
+            {n:"치유의 은사", q:"내가 누군가에게 손을 얹고 기도할 때, 즉각적인 치유가 반복적으로 일어나는 것을 경험한 적이 있다.", verses:["고전 12:9,28,30", "행 3:1-16", "막 2:1-23"]},
+            {n:"방언 통역의 은사", q:"사람들이 방언으로 말하는 것을 들을 때, 성령께서 그 메시지를 내게 드러내 주시는 것을 느끼며, 나는 그것을 교회를 위해 통역하여 말한 적이 있다.", verses:["고전 12:10", "고전 14:5,26-28"]},
+            {n:"능력 행함의 은사", q:"내 안에서 역사하시는 하나님의 능력을 통해 귀신을 쫓아내고 병든 자를 치유하는 것을 경험했으며, 자연 가운데 나타나는 하나님의 초자연적인 개입을 본 적이 있다.", verses:["고전 12:10,28-29", "요 2:1-11", "눅 5:1-11"]},
+            {n:"방언의 은사", q:"내가 이해하지 못하는 언어로 말한 적이 있으며, 그때 누군가가 내가 방금 한 말을 통역하여 전한 적이 있다.", verses:["고전 12:10,28-30", "고전 13:1", "고전 14:1-33", "행 2:1-11"]}
         ];
         const GIFT_GUIDES = {
-            "다스림": "기획력과 조직 관리 역량이 탁월합니다. 목표를 실행 가능한 계획으로 만드는 능력이 있으나, 일의 진척 때문에 동역자의 마음을 놓치지 않도록 주의하십시오.",
-            "사도": "새로운 영역을 개척하는 비전가입니다. 낯선 환경에서도 복음을 확장할 때 에너지가 넘치며 새로운 시도에 최적화되어 있습니다.",
-            "가르침": "진리를 체계적으로 전달하는 능력이 뛰어납니다. 남들의 깨달음에서 보람을 느끼며, 지식과 인격적 교감의 균형이 중요합니다.",
-            "긍휼": "아픔을 민감하게 느끼는 사랑의 은사입니다. 소외된 이웃을 돌볼 때 하나님 심장을 보여주나 본인의 영적 소모를 유의하십시오.",
-            "지혜": "하나님 관점으로 해답을 찾는 통찰력이 있습니다. 분쟁 중재나 실질적 조언 사역에서 역량을 발휘합니다."
+            "다스림": {
+                features: ["기획 능력이 뛰어남", "사역 시작 시 우선순위 설정, 적정 인원 파악 능력", "일의 시행착오를 줄여주는 역할"],
+                verses: ["고전 12:28", "행 6:1-7", "출 18:13-26"]
+            },
+            "사도": {
+                sub: "개척자",
+                features: ["선교사의 은사가 아닌, 개척의 은사", "새로운 시작의 미비한 상태를 잘 견딤", "한 자리에 머물지 않고 여러 영역에서 움직임", "현지 적응이 빠르고 붙임성이 좋음", "외부 정보를 많이 보유 → 선교 전 현장 파악에 적합", "새로운 사람과의 관계 형성 능력이 탁월", "본인이 이동하고자 하는 사람 → 이 은사가 있을 가능성이 높음 (보내주는 것이 좋음)"],
+                verses: ["고전 12:28-29", "엡 4:11-12", "롬 1:5", "행 13:2-3"]
+            },
+            "재주": {
+                features: ["손으로 만드는 모든 것을 잘함", "단순한 손재주를 넘어 손으로 하는 일을 예배의 차원까지 끌어올림", "예) 외과의사, 성막을 지을 수 있는 수준의 역량"],
+                verses: ["출 31:3", "출 35:31", "행 9:36", "왕하 22:5,6"]
+            },
+            "창의적 전달": {
+                features: ["창의적으로 메시지를 전달하는 은사 (음악·미술 이상의 것들)", "남들과 똑같은 것을 지양하고, 자신만의 방식으로 예배", "다음 세대에게 복음을 전달하는 데 중요한 역할"],
+                verses: ["시 150:3-5", "삼하 6:14-15", "막 4:2,33"]
+            },
+            "영분별": {
+                features: ["선한 영과 악한 영, 옳고 그름을 구별하는 은사", "알게 된 내용을 말하는 것보다 기도해야 하는 은사", "나중에 이 사람들의 말이 맞았던 경우가 많음"],
+                verses: ["고전 12:10", "행 5:1-4", "마 16:21-23"]
+            },
+            "권면과 위로": {
+                features: ["일상적인 만남만으로도 사람들이 따라오게 되는 은사", "약하고 상처 많은 사람들을 향한 깊은 마음", "긍휼의 은사와 맞닿아 있음", "시간을 함께해 주는 것만으로도 상대방이 마음을 바꾸게 됨"],
+                verses: ["롬 12:8", "행 11:22", "행 15:30-32"]
+            },
+            "전도": {
+                features: ["100명 중 약 5명에게만 있는 은사", "이 소수를 통해 하나님의 역사가 지속적으로 일어남", "전도는 모두가 할 수 있으나, 은사를 통한 전도의 열매는 이들을 통해 맺힘"],
+                verses: ["엡 4:11", "행 8:26-40", "눅 19:1-10"]
+            },
+            "믿음": {
+                features: ["믿음이 좋아지는 것이 아니라, 말씀을 들은 지 얼마 되지 않아도 믿어지는 은사", "자신의 믿음의 길을 통해 믿음을 잃을 뻔한 사람들을 돌아오게 함", "간증자로 많이 세워짐", "연단의 과정에서 쌓은 경험 → 비슷한 상황의 사람을 돕는 도구가 됨", "타협하지 않는 신앙"],
+                verses: ["고전 12:9", "고전 13:2", "히 11:1", "롬 4:18-21"]
+            },
+            "구제": {
+                features: ["하나님과 연결된 파이프 역할", "베풀고 잊어버리는 것이 이들의 영역", "헌금/구제 후 흘려보냄으로써 할 일을 마침", "이후 상황은 하나님께 맡김"],
+                verses: ["롬 12:8", "고후 6:8", "눅 21:1-4"]
+            },
+            "돕는 은사": {
+                features: ["사람들이 본인의 필요를 모를 때도 먼저 알아채고 채워주는 은사", "부작용이 크지 않음", "상대가 힘들어 하면 스스로 가서 돕고 시간을 함께해 줌"],
+                verses: ["고전 12:28", "롬 12:7", "행 6:1-4", "롬 16:1-2"]
+            },
+            "대접": {
+                features: ["친구 삼는 은사", "사람들에게 먹이고 싶은 마음을 하나님으로부터 받음", "사람들 사이의 관계를 잘 형성해 줌", "새가족 사역, 낯선 사람들끼리의 자리에서 빛남", "연합의 자리를 잘 이끔"],
+                verses: ["벧전 4:9-10", "롬 12:13", "히 13:1-2"]
+            },
+            "중보기도": {
+                features: ["잘 모르는 사람을 위한 기도가 자연스럽게 나오는 은사", "긍휼의 은사와 함께하면 시너지 발생"],
+                verses: ["롬 8:26-27", "요 17:9-26", "딤전 2:1-2", "갈 1:9, 14:12-13"]
+            },
+            "지식": {
+                features: ["100명 중 약 1명의 은사", "야다(꿰뚫어 아는 것): 일반인들이 모르는 지식을 발견함", "성경연구, 축사 사역에 배치됨", "질문을 통해 상대방의 상태를 파악 (객관적·구체적 질문)", "상대방의 정확한 상황을 설명하고 전달", "큐티 시 성경말씀을 통해 자신의 일을 어떻게 해나가야 할지 알게 됨"],
+                verses: ["고전 12:8", "막 2:6-8", "요 1:45-50"]
+            },
+            "지도력": {
+                features: ["따뜻한 카리스마, 멘토링 능력", "겉으로 리더십이 없어 보일 수 있으나, 상대의 이야기를 경청한 후 방향을 제시하고 동행까지 함", "길을 모르는 사람들에게 동기부여를 주어 움직이게 함", "이 사람과의 대화를 통해 많은 사람이 자신의 길을 찾음", "배후에 성령님이 계심"],
+                verses: ["롬 12:8", "히 13:17", "눅 22:25-37"]
+            },
+            "긍휼": {
+                features: ["마음의 은사: 타인의 고통을 짊어지는 은사", "어려운 사람을 향한 마음이 매우 깊고 집중도가 높음", "매우 이타적이라 당하고 나서야 알게 되는 경우가 있음", "중보기도 은사와 함께할 때 시너지 발생"],
+                verses: ["롬 12:8", "마 5:7", "막 10:46-52", "눅 10:25-37"]
+            },
+            "예언": {
+                verses: ["롬 12:6", "고전 12:10,28", "고전 13:2", "벧후 1:19"]
+            },
+            "목양": {
+                sub: "목자",
+                features: ["나의 경험을 통해 다른 사람을 이끄는 역할", "한 영혼에 대한 애착과 관심이 매우 강함"],
+                verses: ["엡 4:11-12", "벧전 5:1-4", "요 10:1-18"]
+            },
+            "가르침": {
+                features: ["10개를 배우면 깨달은 바까지 더해 최소 12개를 전달하는 능력", "배운 것에 한 가지 이상을 더 얹어 전달 → 듣는 사람에게 유익", "배우는 것 자체도 사역"],
+                verses: ["롬 12:7", "고전 12:28", "행 18:24-28", "딤후 2:2"]
+            },
+            "지혜": {
+                features: ["사람들이 자신의 길을 물을 때 답을 가지고 있는 은사", "누군가 무엇을 질문할지 미리 아는 은사", "자신에게 구체적인 팁을 주는 은사", "문제가 생긴 사람 옆에 하나님이 붙여주심", "비효율적으로 보이는 조언도 하나님이 쓰시는 경우 간증으로 이어짐"],
+                verses: ["고전 12:8", "약 3:13-18", "고전 2:3-14", "렘 9:23-24"]
+            }
         };
-        const DEPARTMENTS = [
-            {n:"유아부", r:["목양","가르침"]},
-            {n:"유년부", r:["목양","가르침"]},
-            {n:"초등부", r:["가르침","다스림"]},
-            {n:"중등부", r:["가르침","사도"]},
-            {n:"청년멘토", r:["권면/위로","다스림"]},
-            {n:"안내팀", r:["대접/친절","돕는 은사"]},
-            {n:"중보기도팀", r:["중보기도"]},
-            {n:"순장", r:["목양","권면/위로"]},
-            {n:"새가족부", r:["대접/친절","전도"]},
-            {n:"상담팀", r:["긍휼","지혜"]},
-            {n:"부부사역팀", r:["권면/위로","목양"]},
-            {n:"환경미화팀", r:["재주","돕는 은사"]}
-        ];
         const BIBLE_VERSES = [
             { v: '"우리는 그가 만드신 바라 그리스도 예수 안에서 선한 일을 위하여 지으심을 받은 자니" (엡 2:10)', c: "성도님은 하나님의 걸작품입니다. 다음 영역으로 더 깊이 들어가 볼까요?" },
             { v: '"내가 너를 모태에 짓기 전에 너를 알았고 네가 배에서 나오기 전에 너를 성별하였고" (렘 1:5)', c: "하나님은 성도님을 이미 알고 계셨습니다. 한 걸음 더 나아가 봅시다." },
@@ -563,7 +665,7 @@
             currentIsland = step;
             const items = [
                 { id: 1, name: 'Passion', desc: '8문항 · 마음의 방향' },
-                { id: 2, name: 'Spiritual Gifts', desc: '133문항 · 19개 영역' },
+                { id: 2, name: 'Spiritual Gifts', desc: '137문항 · 19개 영역 + 표적의 은사' },
                 { id: 3, name: 'Style', desc: '14문항 · 사역 스타일' }
             ];
             document.getElementById('map-container').innerHTML = items.map(item => {
@@ -591,7 +693,7 @@
         function renderPassionStep() {
             const step = PASSION_Q[p_cur];
             document.getElementById('p-q-idx').innerText = `PASSION ${p_cur+1}/8`;
-            document.getElementById('ui-zt').innerText = 'Passion';
+            document.getElementById('ui-zt').innerText = '';
             document.getElementById('ui-idx-now').innerText = `${p_cur+1}/8`;
             document.getElementById('ui-bar').style.width = (p_cur+1)/8*100+'%';
 
@@ -655,10 +757,10 @@
         function startGifts() { updateHeaderUI(2); renderGift(); showPage('scr-quiz'); }
 
         function renderGift() {
-            const ZN = ['부르심의 숲', '은혜의 시내', '연단의 골짜기', '믿음의 들판', '사명의 산맥', '비전의 산등성이', '정상: 성전'];
-            const zi = Math.floor(cur/19);
-            document.getElementById('ui-zt').innerText = ZN[zi] || ZN[ZN.length-1];
-            document.getElementById('ui-idx-now').innerText = `${cur+1}/133`;
+            const within = (cur % 19) + 1;
+            const zone = Math.floor(cur / 19) + 1;
+            document.getElementById('ui-zt').innerText = `${within}/19`;
+            document.getElementById('ui-idx-now').innerText = `${zone}/7`;
             document.getElementById('ui-q-text').innerText = Q_DATA[cur];
             document.getElementById('ui-bar').style.width = (cur+1)/133*100+'%';
         }
@@ -693,7 +795,7 @@
             const item = SIGN_Q[sign_cur];
             document.getElementById('sign-q-idx').innerText = `표적의 은사 ${sign_cur+1}/4 · ${item.n}`;
             document.getElementById('sign-q-text').innerText = item.q;
-            document.getElementById('ui-zt').innerText = '표적의 은사';
+            document.getElementById('ui-zt').innerText = '';
             document.getElementById('ui-idx-now').innerText = `${sign_cur+1}/4`;
             document.getElementById('ui-bar').style.width = (sign_cur+1)/4*100+'%';
         }
@@ -719,7 +821,7 @@
             document.getElementById('ui-style-cat').innerText = q.t.toUpperCase();
             document.getElementById('style-left-label').innerText = q.l;
             document.getElementById('style-right-label').innerText = q.r;
-            document.getElementById('ui-zt').innerText = 'Style';
+            document.getElementById('ui-zt').innerText = '';
             document.getElementById('ui-idx-now').innerText = `${s_cur+1}/14`;
             document.getElementById('ui-bar').style.width = (s_cur+1)/14*100+'%';
             document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
@@ -743,16 +845,13 @@
             const p = document.getElementById('u-p').value.trim();
             if(!n || !b || !p) return alert('모든 정보를 입력해 주세요.');
 
-            // Style A(0-6) = 업무방식, B(7-13) = 에너지획득
             const eScore = s_ans.slice(7, 14).reduce((a,b)=>a+b, 0);
             const oScore = s_ans.slice(0, 7).reduce((a,b)=>a+b, 0);
-            // Min=7 (all 1s), Max=35. Range=28.
             const ePct = Math.max(0, Math.min(100, Math.round((eScore - 7) / 28 * 100)));
             const oPct = Math.max(0, Math.min(100, Math.round((oScore - 7) / 28 * 100)));
-            const eType = ePct >= 60 ? '사람 중심' : ePct <= 40 ? '일 중심' : '중립적';
-            const oType = oPct >= 60 ? '계획적' : oPct <= 40 ? '유연한' : '중립적';
+            const eType = ePct >= 60 ? '관계 중심' : ePct <= 40 ? '일 중심' : '중립적';
+            const oType = oPct >= 60 ? '체계적인' : oPct <= 40 ? '유연한' : '중립적';
 
-            // Gift: 7 questions × 3pts max = 21
             let sc = new Array(19).fill(0);
             ans.forEach((v, i) => { sc[i % 19] += (v || 0); });
             const allRes = GIFTS.map((g, i) => ({ name: g.n, score: sc[i] })).sort((a,b) => b.score - a.score);
@@ -763,12 +862,14 @@
             document.getElementById('res-info').innerText = `${b} · ${p}`;
             document.getElementById('res-summary').innerHTML =
                 `성도님은 <b>${top3[0].name}</b>의 은사와 <b>${selectedTargets[0] || '주님의 양 무리'}</b>를 향한 마음을 가지셨습니다. ` +
-                `<b>${eType} · ${oType}</b>의 사역 스타일로 하나님의 도구가 될 때 가장 빛이 날 것입니다.`;
+                `<b>${eType}, ${oType}</b> 스타일로 하나님의 도구가 될 때 가장 빛이 날 것입니다.`;
 
-            document.getElementById('res-style-e-text').innerText = `${eType} ${eScore}/35점`;
-            document.getElementById('res-dot-e').style.left = ePct + '%';
-            document.getElementById('res-style-o-text').innerText = `${oType} ${oScore}/35점`;
-            document.getElementById('res-dot-o').style.left = oPct + '%';
+            const dotX = Math.max(3, Math.min(97, oPct));
+            const dotY = Math.max(3, Math.min(97, ePct));
+            document.getElementById('quad-dot').style.left = dotX + '%';
+            document.getElementById('quad-dot').style.top = dotY + '%';
+            document.getElementById('quad-text-e').innerText = `${eType} ${eScore}점`;
+            document.getElementById('quad-text-o').innerText = `${oType} ${oScore}점`;
 
             document.getElementById('res-gift-top3').innerHTML = top3.map((g, i) => `
                 <div class="gift-row">
@@ -797,19 +898,17 @@
                 `<span class="tag">#${t}</span>`
             ).join('') || '<span style="font-size: 0.85rem; color: var(--ink-muted);">선택된 항목이 없습니다.</span>';
 
-            // Sign gifts (yes/no)
             document.getElementById('res-sign-list').innerHTML = SIGN_Q.map((item, i) => {
                 const yes = sign_ans[i] === 1;
                 return `<div class="sign-item ${yes ? 'yes' : 'no'}">
-                    <span>${item.n}</span>
-                    <span class="sign-status">${yes ? '경험 있음' : '경험 없음'}</span>
+                    <span>${item.n}<button class="info-btn" onclick="showTip('${item.n}')" type="button">?</button></span>
+                    <span class="sign-status">${yes ? '있음' : '없음'}</span>
                 </div>`;
             }).join('');
 
             updateHeaderUI(0);
             showPage('scr-result');
 
-            // Submit to Google Sheets (admin collection)
             submitToSheets({
                 timestamp: new Date().toISOString(),
                 name: n, birth: b, phone: p,
@@ -837,8 +936,30 @@
 
         window.showTip = function(name) {
             event && event.stopPropagation && event.stopPropagation();
-            document.getElementById('tip-title').innerText = `[${name}] 가이드`;
-            document.getElementById('tip-body').innerText = GIFT_GUIDES[name] || '상담을 통해 더 깊은 의미를 확인해 보세요.';
+            let guide = GIFT_GUIDES[name];
+            if(!guide) {
+                const signItem = SIGN_Q.find(s => s.n === name);
+                if(signItem) guide = { verses: signItem.verses };
+            }
+            const titleEl = document.getElementById('tip-title');
+            const bodyEl = document.getElementById('tip-body');
+            titleEl.innerText = guide && guide.sub ? `${name} (${guide.sub})` : name;
+            if(guide && typeof guide === 'object') {
+                let html = '';
+                if(guide.features && guide.features.length) {
+                    html += '<div class="tip-h">특징</div><ul class="tip-list">';
+                    guide.features.forEach(f => html += `<li>${f}</li>`);
+                    html += '</ul>';
+                }
+                if(guide.verses && guide.verses.length) {
+                    html += '<div class="tip-h">관련 성경구절</div>';
+                    html += `<p class="tip-verses">${guide.verses.join(' / ')}</p>`;
+                }
+                if(!html) html = '<p class="tip-note">상담을 통해 더 깊은 의미를 확인해 보세요.</p>';
+                bodyEl.innerHTML = html;
+            } else {
+                bodyEl.innerHTML = '<p class="tip-note">상담을 통해 더 깊은 의미를 확인해 보세요.</p>';
+            }
             document.getElementById('tooltip-layer').classList.add('open');
         };
         window.hideTip = function() {
@@ -897,7 +1018,6 @@
             saveState();
         }
 
-        // On load
         checkResume();
     </script>
 </body>
