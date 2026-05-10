@@ -348,7 +348,8 @@
                     <div class="report-header">
                         <div class="label-tiny" style="margin-bottom: 0.5rem;">SPIRITUAL IDENTITY</div>
                         <h1 id="res-name" style="font-size: 1.65rem; margin-bottom: 0.35rem;"></h1>
-                        <p id="res-info" style="font-size: 0.8rem; color: var(--ink-mid); font-weight: 600; margin: 0;"></p>
+                        <p id="res-info" style="font-size: 0.8rem; color: var(--ink-mid); font-weight: 600; margin: 0 0 0.3rem;"></p>
+                        <p id="res-date" style="font-size: 0.68rem; color: var(--ink-muted); font-weight: 800; letter-spacing: 0.12em; margin: 0; text-transform: uppercase;"></p>
                     </div>
                     <div class="report-section">
                         <div class="section-title">Personal Insight</div>
@@ -858,8 +859,12 @@
             const top3 = allRes.slice(0, 3);
             const extra = allRes.filter((g, i) => i >= 3 && g.score >= 15).slice(0, 6);
 
+            const now = new Date();
+            const pad = x => String(x).padStart(2, '0');
+            const surveyDate = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}`;
             document.getElementById('res-name').innerText = n;
             document.getElementById('res-info').innerText = `${b} · ${p}`;
+            document.getElementById('res-date').innerText = `Survey · ${surveyDate}`;
             document.getElementById('res-summary').innerHTML =
                 `성도님은 <b>${top3[0].name}</b>의 은사와 <b>${selectedTargets[0] || '주님의 양 무리'}</b>를 향한 마음을 가지셨습니다. ` +
                 `<b>${eType}, ${oType}</b> 스타일로 하나님의 도구가 될 때 가장 빛이 날 것입니다.`;
@@ -910,18 +915,30 @@
             showPage('scr-result');
 
             submitToSheets({
-                timestamp: new Date().toISOString(),
-                name: n, birth: b, phone: p,
+                timestamp: now.toISOString(),
+                surveyDate: surveyDate,
+                name: n,
+                birth: b,
+                phone: p,
+                passion1: p_ans[0] || '',
+                passion2: p_ans[1] || '',
+                passion3: p_ans[2] || '',
+                passion4: p_ans[3] || '',
+                passion5: p_ans[4] || '',
+                passion6: p_ans[5] || '',
+                targets: selectedTargets.join(', '),
+                issues: selectedIssues.join(', '),
                 top3: top3.map(g => `${g.name}(${g.score})`).join(' | '),
-                allGifts: allRes.map(g => `${g.name}:${g.score}`).join(','),
-                style: `${eType}/${oType} · e=${eScore} o=${oScore}`,
-                signGifts: SIGN_Q.map((item, i) => `${item.n}:${sign_ans[i]===1?'Y':'N'}`).join(','),
-                vision: p_ans[0] || '', passion: p_ans.slice(0,6).join(' || '),
-                targets: selectedTargets.join(','), issues: selectedIssues.join(',')
+                allGifts: allRes.map(g => `${g.name}:${g.score}`).join(', '),
+                signGifts: SIGN_Q.map((item, i) => `${item.n}:${sign_ans[i]===1?'Y':'N'}`).join(', '),
+                eScore: eScore,
+                oScore: oScore,
+                eType: eType,
+                oType: oType
             });
         };
 
-        const SHEETS_URL = ''; // ← Google Apps Script 배포 URL을 여기에 붙여 넣으세요
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxsky7q-IBVlQnNRsRYuNlIjbew1PMshsVAwNkLJuiqZgcPL4g1XqJ9XXZ9gvwL6YMv/exec';
         function submitToSheets(data) {
             if(!SHEETS_URL) return;
             try {
